@@ -1,7 +1,7 @@
 import React from 'react';
-import Post from './post/Post';
+import {Post} from './post/Post';
 
-const MyPosts:React.FC = () => {
+export const MyPosts:React.FC = () => {
     return (
             <div>
                 My Posts
@@ -10,13 +10,12 @@ const MyPosts:React.FC = () => {
                     <button>Add Post</button>
                 </div>
                 <div>
-                    <Post/>
-                    <Post/>
-                    <Post/>
-                    <Post/>
+                    <Post postName={'AAAAA'}/>
+                    <Post postName={'PPPPP'}/>
+                    <Post postName={'OOOOO'}/>
+                    <Post postName={'EEEEE'}/>
                 </div>
             </div>
     );
 };
 
-export default MyPosts;
