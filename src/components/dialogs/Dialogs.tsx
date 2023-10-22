@@ -12,7 +12,7 @@ export const DialogItem:React.FC<DialogItemPropsType> = (props) => {
     const {name, id} = props
 
     return(
-        <div className={s.dialog}>
+        <div key={id} className={s.dialog}>
             <NavLink to={`/dialogs/${id}`}>{name}</NavLink>
         </div>
     )
@@ -20,14 +20,15 @@ export const DialogItem:React.FC<DialogItemPropsType> = (props) => {
 
 type MessagePropsType = {
     name: string
+    id: number
 }
 
 export const Message:React.FC<MessagePropsType> = (props) => {
 
-    const {name} = props
+    const {name, id} = props
 
     return(
-        <div className={s.message}>{name}</div>
+        <div key={id} className={s.message}>{name}</div>
     )
 }
 
@@ -49,19 +50,21 @@ export const Dialogs:React.FC = () => {
         {id: 5, name: 'Yep'},
     ]
 
+    let dialogItems = dialogData.map((dialog: DialogItemPropsType) => <DialogItem name={dialog.name} id={dialog.id}/>)
+
+    let messageItems = messagesData.map((message: MessagePropsType) => <Message name={message.name} id={message.id}/>)
+
     return (
         <div className={s.dialogs}>
             <div className={s.dialogsItems}>
-                <DialogItem name={'Alex'} id={1}/>
-                <DialogItem name={'Max'} id={2}/>
-                <DialogItem name={'John'} id={3}/>
-                <DialogItem name={'Jack'} id={4}/>
-                <DialogItem name={'Tom'} id={5}/>
+                {
+                    dialogItems
+                }
             </div>
             <div className={s.messages}>
-                <Message name={'Hi'}/>
-                <Message name={'How are you?'}/>
-                <Message name={'Yep'}/>
+                {
+                    messageItems
+                }
             </div>
         </div>
     );
