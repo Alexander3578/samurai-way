@@ -6,9 +6,7 @@ export type DialogItemPropsType = {
     id: number
 }
 
-export const DialogItem:React.FC<DialogItemPropsType> = (props) => {
-
-    const {name, id} = props
+export const DialogItem:React.FC<DialogItemPropsType> = ({name, id}) => {
 
     return(
         <S.DialogItem key={id}>

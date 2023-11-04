@@ -8,19 +8,32 @@ import {Profile} from './components/profile/Profile';
 import {News} from './components/news/News';
 import {Music} from './components/music/Music';
 import {Settings} from './components/settings/Settings';
+import {DialogsType, ProfileType} from './redux/state';
 
-const App: React.FC = () => {
+type AppPropsType = {
+    profile: ProfileType
+    dialogs: DialogsType
+}
+
+const App: React.FC<AppPropsType> = ({profile, dialogs}) => {
     return (
         <BrowserRouter>
             <div className="app-wrapper">
                 <Header/>
                 <Navber/>
                 <div className="app-wrapper-content">
-                    <Route path={'/profile'} component={Profile}/>
-                    <Route path={'/dialogs'} component={Dialogs}/>
-                    <Route path={'/news'} component={News}/>
-                    <Route path={'/music'} component={Music}/>
-                    <Route path={'/settings'} component={Settings}/>
+                    {/*<Route path={'/profile'} component={Profile}/>*/}
+                    {/*<Route path={'/dialogs'} component={Dialogs}/>*/}
+                    {/*<Route path={'/news'} component={News}/>*/}
+                    {/*<Route path={'/music'} component={Music}/>*/}
+                    {/*<Route path={'/settings'} component={Settings}/>*/}
+
+                    <Route path={'/profile'} render={()=><Profile postData={profile.postData}/>}/>
+                    <Route path={'/dialogs'} render={()=><Dialogs dialogData={dialogs.dialogData}
+                                                                  messagesData={dialogs.messagesData}/>}/>
+                    <Route path={'/news'} render={()=><News/>}/>
+                    <Route path={'/music'} render={()=><Music/>}/>
+                    <Route path={'/settings'} render={()=><Settings/>}/>
                 </div>
             </div>
         </BrowserRouter>

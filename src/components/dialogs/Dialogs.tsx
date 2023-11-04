@@ -3,23 +3,12 @@ import {DialogItem, DialogItemPropsType} from './dialogItem/DialogItem';
 import {Message, MessagePropsType} from './messageItem/MessageItem';
 import {S} from './Dialogs_Styles'
 
-export const Dialogs:React.FC = (props) => {
+type DialogsPropsType = {
+    dialogData: Array<DialogItemPropsType>
+    messagesData: MessagePropsType[]
+}
 
-    const dialogData:Array<DialogItemPropsType> = [
-        {id: 1, name: 'Alex'},
-        {id: 2, name: 'Max'},
-        {id: 3, name: 'John'},
-        {id: 4, name: 'Jack'},
-        {id: 5, name: 'Tom'},
-    ]
-
-    const messagesData:Array<MessagePropsType> = [
-        {id: 1, name: 'Hi'},
-        {id: 2, name: 'How are you?'},
-        {id: 3, name: 'Yep'},
-        {id: 4, name: 'Yep'},
-        {id: 5, name: 'Yep'},
-    ]
+export const Dialogs:React.FC<DialogsPropsType> = ({dialogData, messagesData}) => {
 
     let dialogItems = dialogData.map((dialog: DialogItemPropsType) => <DialogItem name={dialog.name} id={dialog.id}/>)
 
