@@ -16,7 +16,16 @@ type StateType = {
     dialogs: DialogsType
 }
 
-export let state:StateType = {
+export const addPost = (postName: string) => {
+    let newPost = {
+        id: 5,
+        postName: postName,
+        likesCount: 30
+    }
+    state = {...state, profile: {...state.profile, postData: [ newPost, ...state.profile.postData]}};
+}
+
+export let state: StateType = {
     'profile': {
         'postData': [
             {id: 1, postName: 'OOOOO', likesCount: 5},
@@ -41,4 +50,5 @@ export let state:StateType = {
             {id: 5, name: 'Tom'},
         ],
     }
-};
+}
+;
