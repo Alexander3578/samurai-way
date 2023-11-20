@@ -18,13 +18,14 @@ export type StateType = {
     dialogs: DialogsType
 }
 
-export const addPost = (postName: string) => {
+export const addPost = () => {
     let newPost = {
         id: 5,
-        postName: postName,
+        postName: state.profile.newPostText,
         likesCount: 30
     }
     state = {...state, profile: {...state.profile, postData: [ newPost, ...state.profile.postData]}};
+    state.profile.newPostText = '';
     rerenderEntireTree(state);
 }
 

@@ -9,7 +9,8 @@ export let rerenderEntireTree = (state: StateType) => {
         <App dialogs={state['dialogs']}
              profile={state['profile']}
              addPost={addPost}
-             onPostChange={onPostChange}/>,
+             onPostChange={onPostChange}
+             newPostText={state['profile'].newPostText}/>,
         document.getElementById('root')
     );
 }

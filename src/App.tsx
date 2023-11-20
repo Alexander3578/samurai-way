@@ -13,12 +13,13 @@ import {DialogsType, ProfileType} from './redux/state';
 type AppPropsType = {
     profile: ProfileType
     dialogs: DialogsType
-    addPost: (postName: string) => void
+    addPost: () => void
     onPostChange: (postName: string) => void
+    newPostText: string
 }
 
 const App: React.FC<AppPropsType> = (props) => {
-    const {profile, dialogs, addPost, onPostChange} = props
+    const {profile, dialogs, addPost, onPostChange, newPostText} = props
 
     return (
         <BrowserRouter>
@@ -28,7 +29,8 @@ const App: React.FC<AppPropsType> = (props) => {
                 <div className="app-wrapper-content">
                     <Route path={'/profile'} render={()=><Profile postData={profile.postData}
                                                                   addPost={addPost}
-                                                                  onPostChange={onPostChange}/>}/>
+                                                                  onPostChange={onPostChange}
+                                                                  newPostText={newPostText}/>}/>
                     <Route path={'/dialogs'} render={()=><Dialogs dialogData={dialogs.dialogData}
                                                                   messagesData={dialogs.messagesData}/>}/>
                     <Route path={'/news'} render={()=><News/>}/>
