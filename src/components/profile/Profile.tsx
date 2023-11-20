@@ -6,14 +6,17 @@ import {PostPropsType} from './myPosts/post/Post';
 type ProfilePropsType = {
     postData: PostPropsType[]
     addPost: (postName: string) => void
+    onPostChange: (postName: string) => void
 }
 
-export const Profile:React.FC<ProfilePropsType> = ({postData, addPost}) => {
+export const Profile:React.FC<ProfilePropsType> = (props) => {
+    const {postData, addPost, onPostChange} = props;
     return (
         <div>
             <ProfileInfo/>
             <MyPosts postData={postData}
-                     addPost={addPost}/>
+                     addPost={addPost}
+                     onPostChange={onPostChange}/>
         </div>
     );
 };

@@ -14,23 +14,21 @@ type AppPropsType = {
     profile: ProfileType
     dialogs: DialogsType
     addPost: (postName: string) => void
+    onPostChange: (postName: string) => void
 }
 
-const App: React.FC<AppPropsType> = ({profile, dialogs, addPost}) => {
+const App: React.FC<AppPropsType> = (props) => {
+    const {profile, dialogs, addPost, onPostChange} = props
+
     return (
         <BrowserRouter>
             <div className="app-wrapper">
                 <Header/>
                 <Navber/>
                 <div className="app-wrapper-content">
-                    {/*<Route path={'/profile'} component={Profile}/>*/}
-                    {/*<Route path={'/dialogs'} component={Dialogs}/>*/}
-                    {/*<Route path={'/news'} component={News}/>*/}
-                    {/*<Route path={'/music'} component={Music}/>*/}
-                    {/*<Route path={'/settings'} component={Settings}/>*/}
-
                     <Route path={'/profile'} render={()=><Profile postData={profile.postData}
-                                                                  addPost={addPost}/>}/>
+                                                                  addPost={addPost}
+                                                                  onPostChange={onPostChange}/>}/>
                     <Route path={'/dialogs'} render={()=><Dialogs dialogData={dialogs.dialogData}
                                                                   messagesData={dialogs.messagesData}/>}/>
                     <Route path={'/news'} render={()=><News/>}/>

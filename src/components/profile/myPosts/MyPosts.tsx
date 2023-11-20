@@ -1,30 +1,38 @@
-import React, {useRef} from 'react';
+import React, {ChangeEvent, useRef} from 'react';
 import {Post, PostPropsType} from './post/Post';
 import s from './MyPosts.module.css'
 
 type MyPostsPropsType = {
     postData: PostPropsType[]
     addPost: (postName: string) => void
+    onPostChange: (postName: string) => void
 }
 
-export const MyPosts: React.FC<MyPostsPropsType> = ({postData, addPost}) => {
+export const MyPosts: React.FC<MyPostsPropsType> = (props) => {
+    const {postData, addPost, onPostChange} = props
 
     const newPost = useRef<HTMLTextAreaElement>(null);
 
-    const addPostHandler = ():void => {
-        if(newPost.current)
+    const addPostHandler = (): void => {
+        if (newPost.current) {
             addPost(newPost.current.value)
+            newPost.current.value = ''
+        }
     }
 
-    const postItems = postData.map((item:PostPropsType) => <Post key = {item.id}
-                                                                 postName={item.postName}
-                                                                 id={item.id}
-                                                                 likesCount={item.likesCount}/>)
+    const onPostChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
+            onPostChange(e.currentTarget.value)
+    }
+
+    const postItems = postData.map((item: PostPropsType) => <Post key={item.id}
+                                                                  postName={item.postName}
+                                                                  id={item.id}
+                                                                  likesCount={item.likesCount}/>)
     return (
         <div className={s.postBlock}>
             <h3>My Posts</h3>
             <div>
-                <textarea ref={newPost}></textarea>
+                <textarea ref={newPost} onChange={onPostChangeHandler}></textarea>
                 <div>
                     <button onClick={addPostHandler}>Add Post</button>
                 </div>
