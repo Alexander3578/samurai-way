@@ -1,7 +1,6 @@
 import {DialogItemPropsType} from '../components/dialogs/dialogItem/DialogItem';
 import {MessagePropsType} from '../components/dialogs/messageItem/MessageItem';
 import {PostPropsType} from '../components/profile/myPosts/post/Post';
-import {rerenderEntireTree} from '../render';
 
 export type ProfileType = {
     postData: Array<PostPropsType>
@@ -18,11 +17,18 @@ export type StateType = {
     dialogs: DialogsType
 }
 
+let rerenderEntireTree = (state: StateType) => {
+}
+
+export const subscribe = (observer: (state: StateType)=> void) => {
+    rerenderEntireTree = observer;
+}
+
 export const addPost = () => {
     let newPost = {
         id: 5,
         postName: state.profile.newPostText,
-        likesCount: 30
+        likesCount: 0
     }
     state = {...state, profile: {...state.profile, postData: [ newPost, ...state.profile.postData]}};
     state.profile.newPostText = '';

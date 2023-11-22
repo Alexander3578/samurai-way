@@ -3,7 +3,7 @@ import './App.css';
 import Header from './components/header/Header';
 import {Navber} from './components/navbar/Navber';
 import {Dialogs} from './components/dialogs/Dialogs';
-import {BrowserRouter, Route} from 'react-router-dom';
+import {Route} from 'react-router-dom';
 import {Profile} from './components/profile/Profile';
 import {News} from './components/news/News';
 import {Music} from './components/music/Music';
@@ -22,7 +22,6 @@ const App: React.FC<AppPropsType> = (props) => {
     const {profile, dialogs, addPost, onPostChange, newPostText} = props
 
     return (
-        <BrowserRouter>
             <div className="app-wrapper">
                 <Header/>
                 <Navber/>
@@ -38,7 +37,6 @@ const App: React.FC<AppPropsType> = (props) => {
                     <Route path={'/settings'} render={()=><Settings/>}/>
                 </div>
             </div>
-        </BrowserRouter>
     );
 }
 
