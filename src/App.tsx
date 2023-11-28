@@ -8,18 +8,17 @@ import {Profile} from './components/profile/Profile';
 import {News} from './components/news/News';
 import {Music} from './components/music/Music';
 import {Settings} from './components/settings/Settings';
-import {DialogsType, ProfileType} from './redux/state';
+import {ActionType, DialogsType, ProfileType} from './redux/state';
 
 type AppPropsType = {
     profile: ProfileType
     dialogs: DialogsType
-    addPost: () => void
-    onPostChange: (postName: string) => void
+    dispatch: (action: ActionType) => void
     newPostText: string
 }
 
 const App: React.FC<AppPropsType> = (props) => {
-    const {profile, dialogs, addPost, onPostChange, newPostText} = props
+    const {profile, dialogs, dispatch, newPostText} = props
 
     return (
             <div className="app-wrapper">
@@ -27,8 +26,7 @@ const App: React.FC<AppPropsType> = (props) => {
                 <Navber/>
                 <div className="app-wrapper-content">
                     <Route path={'/profile'} render={()=><Profile postData={profile.postData}
-                                                                  addPost={addPost}
-                                                                  onPostChange={onPostChange}
+                                                                  dispatch = {dispatch}
                                                                   newPostText={newPostText}/>}/>
                     <Route path={'/dialogs'} render={()=><Dialogs dialogData={dialogs.dialogData}
                                                                   messagesData={dialogs.messagesData}/>}/>

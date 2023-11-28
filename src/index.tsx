@@ -11,8 +11,7 @@ const rerenderEntireTree = () => {
             <BrowserRouter>
                 <App dialogs={store.getState()['dialogs']}
                      profile={store.getState()['profile']}
-                     addPost={store.addPost.bind(store)}
-                     onPostChange={store.onPostChange.bind(store)}
+                     dispatch={store.dispatch.bind(store)}
                      newPostText={store.getState()['profile'].newPostText}/>
             </BrowserRouter>
         </React.StrictMode>,
