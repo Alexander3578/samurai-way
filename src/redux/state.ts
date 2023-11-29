@@ -17,15 +17,10 @@ export type StateType = {
     dialogs: DialogsType
 }
 
-const onChangeNewPost = 'CHANGE-NEW-POST';
-const addPostAD = 'ADD-POST';
+const onChangeNewPostAT = 'CHANGE-NEW-POST';
+const addPostAT = 'ADD-POST';
 
-export type ActionType = {
-    type: typeof onChangeNewPost | typeof addPostAD
-    payload?: {
-        postName: string
-    }
-}
+export type ActionType = addPostACType | onChangeNewPostACType;
 
 type StoreType = {
     _state: StateType
@@ -77,7 +72,7 @@ export const store: StoreType = {
     },
     dispatch(action) {
         switch(action.type){
-            case addPostAD: {
+            case addPostAT: {
                 let newPost = {
                     id: 5,
                     postName: this._state.profile.newPostText,
@@ -88,12 +83,28 @@ export const store: StoreType = {
                 this._callSubscriber();
                 break;
             }
-            case onChangeNewPost: {
+            case onChangeNewPostAT: {
                 if(action.payload)
                 this._state.profile.newPostText = action.payload.postName;
                 this._callSubscriber();
             }
         }
     }
+}
+
+type addPostACType = ReturnType<typeof addPostAC>
+
+export const addPostAC = () => ({type: addPostAT} as const)
+
+
+type onChangeNewPostACType = ReturnType<typeof onChangeNewPostAC>
+
+export const onChangeNewPostAC = (newPostText: string) => {
+    return {
+        type: onChangeNewPostAT,
+        payload: {
+            postName: newPostText
+        }
+    } as const
 }
 

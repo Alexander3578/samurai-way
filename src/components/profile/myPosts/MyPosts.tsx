@@ -1,7 +1,7 @@
 import React, {ChangeEvent} from 'react';
 import {Post, PostPropsType} from './post/Post';
 import s from './MyPosts.module.css'
-import {ActionType} from '../../../redux/state';
+import {ActionType, addPostAC, onChangeNewPostAC} from '../../../redux/state';
 
 type MyPostsPropsType = {
     postData: PostPropsType[]
@@ -15,12 +15,11 @@ export const MyPosts: React.FC<MyPostsPropsType> = (props) => {
     // const newPost = useRef<HTMLTextAreaElement>(null);
 
     const addPostHandler = (): void => {
-            dispatch({type: 'ADD-POST'})
+            dispatch(addPostAC());
     }
 
     const onPostChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
-        let action = {type: 'CHANGE-NEW-POST', payload: {postName: e.currentTarget.value}} as const;
-        dispatch(action)
+        dispatch(onChangeNewPostAC(e.currentTarget.value));
     }
 
 
