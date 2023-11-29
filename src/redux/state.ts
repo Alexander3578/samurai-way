@@ -10,6 +10,7 @@ export type ProfileType = {
 export type DialogsType = {
     dialogData: Array<DialogItemPropsType>
     messagesData: Array<MessagePropsType>
+    newMessage: string
 }
 
 export type StateType = {
@@ -19,8 +20,10 @@ export type StateType = {
 
 const onChangeNewPostAT = 'CHANGE-NEW-POST';
 const addPostAT = 'ADD-POST';
+const onChangeNewMessageAT = 'CHANGE-NEW-MESSAGE'
+const addMessageAT = 'ADD-MESSAGE';
 
-export type ActionType = addPostACType | onChangeNewPostACType;
+export type ActionType = addPostACType | onChangeNewPostACType | onChangeMessageACType | addMessageACType;
 
 type StoreType = {
     _state: StateType
@@ -57,6 +60,7 @@ export const store: StoreType = {
                 {id: 4, name: 'Jack'},
                 {id: 5, name: 'Tom'},
             ],
+            'newMessage': ''
         }
     },
 
@@ -84,8 +88,22 @@ export const store: StoreType = {
                 break;
             }
             case onChangeNewPostAT: {
-                if(action.payload)
                 this._state.profile.newPostText = action.payload.postName;
+                this._callSubscriber();
+                break;
+            }
+            case onChangeNewMessageAT: {
+                this._state.dialogs.newMessage = action.payload.newMessage;
+                this._callSubscriber();
+                break;
+            }
+            case  addMessageAT: {
+                let newMessage = {
+                    id: 6,
+                    name: this._state.dialogs.newMessage,
+                }
+                this._state.dialogs.messagesData.push(newMessage);
+                this._state.dialogs.newMessage = '';
                 this._callSubscriber();
             }
         }
@@ -108,3 +126,17 @@ export const onChangeNewPostAC = (newPostText: string) => {
     } as const
 }
 
+type onChangeMessageACType = ReturnType<typeof onChangeMessageAC>
+
+export const onChangeMessageAC = (newMessage: string) => {
+    return {
+        type: onChangeNewMessageAT,
+        payload: {
+            newMessage
+        }
+    } as const
+}
+
+type addMessageACType = ReturnType<typeof addMessageAC>
+
+export const addMessageAC = () => ({type: addMessageAT} as const)

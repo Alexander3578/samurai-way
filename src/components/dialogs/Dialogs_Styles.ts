@@ -32,11 +32,28 @@ const Message = styled.div`
 
 `
 
+const SendMessageWrap = styled.div`
+  display: flex;
+  gap: 10px;
+  margin-top: 5px;
+`
+
+const MessageField = styled.textarea`
+  resize: none;
+`
+
+const SendMessageButton = styled.button`
+  
+`
+
 export const S = {
     Dialogs,
     DialogsItems,
     DialogItem,
     MyNavLink,
     Messages,
-    Message
+    Message,
+    MessageField,
+    SendMessageButton,
+    SendMessageWrap
 }
