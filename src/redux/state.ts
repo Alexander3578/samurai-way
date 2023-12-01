@@ -1,6 +1,8 @@
 import {DialogItemPropsType} from '../components/dialogs/dialogItem/DialogItem';
 import {MessagePropsType} from '../components/dialogs/messageItem/MessageItem';
 import {PostPropsType} from '../components/profile/myPosts/post/Post';
+import {ActionProfileType, profileReducer} from './profile-reducer';
+import {ActionDialogType, dialogReducer} from './dialog-reducer';
 
 export type ProfileType = {
     postData: Array<PostPropsType>
@@ -18,12 +20,7 @@ export type StateType = {
     dialogs: DialogsType
 }
 
-const onChangeNewPostAT = 'CHANGE-NEW-POST';
-const addPostAT = 'ADD-POST';
-const onChangeNewMessageAT = 'CHANGE-NEW-MESSAGE'
-const addMessageAT = 'ADD-MESSAGE';
-
-export type ActionType = addPostACType | onChangeNewPostACType | onChangeMessageACType | addMessageACType;
+export type ActionType = ActionProfileType | ActionDialogType;
 
 type StoreType = {
     _state: StateType
@@ -31,7 +28,6 @@ type StoreType = {
     getState: () => StateType
     subscribe: (observer: () => void) => void
     dispatch: (action: ActionType) => void
-
 }
 
 export const store: StoreType = {
@@ -74,69 +70,10 @@ export const store: StoreType = {
     subscribe(observer: () => void) {
         this._callSubscriber = observer;
     },
-    dispatch(action) {
-        switch(action.type){
-            case addPostAT: {
-                let newPost = {
-                    id: 5,
-                    postName: this._state.profile.newPostText,
-                    likesCount: 0
-                }
-                this._state.profile.postData.push(newPost);
-                this._state.profile.newPostText = '';
-                this._callSubscriber();
-                break;
-            }
-            case onChangeNewPostAT: {
-                this._state.profile.newPostText = action.payload.postName;
-                this._callSubscriber();
-                break;
-            }
-            case onChangeNewMessageAT: {
-                this._state.dialogs.newMessage = action.payload.newMessage;
-                this._callSubscriber();
-                break;
-            }
-            case  addMessageAT: {
-                let newMessage = {
-                    id: 6,
-                    name: this._state.dialogs.newMessage,
-                }
-                this._state.dialogs.messagesData.push(newMessage);
-                this._state.dialogs.newMessage = '';
-                this._callSubscriber();
-            }
-        }
+
+    dispatch(action: ActionType) {
+        this._state.profile = profileReducer(this._state.profile, action);
+        this._state.dialogs = dialogReducer(this._state.dialogs, action);
+        this._callSubscriber();
     }
 }
-
-type addPostACType = ReturnType<typeof addPostAC>
-
-export const addPostAC = () => ({type: addPostAT} as const)
-
-
-type onChangeNewPostACType = ReturnType<typeof onChangeNewPostAC>
-
-export const onChangeNewPostAC = (newPostText: string) => {
-    return {
-        type: onChangeNewPostAT,
-        payload: {
-            postName: newPostText
-        }
-    } as const
-}
-
-type onChangeMessageACType = ReturnType<typeof onChangeMessageAC>
-
-export const onChangeMessageAC = (newMessage: string) => {
-    return {
-        type: onChangeNewMessageAT,
-        payload: {
-            newMessage
-        }
-    } as const
-}
-
-type addMessageACType = ReturnType<typeof addMessageAC>
-
-export const addMessageAC = () => ({type: addMessageAT} as const)
