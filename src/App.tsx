@@ -8,7 +8,7 @@ import {Profile} from './components/profile/Profile';
 import {News} from './components/news/News';
 import {Music} from './components/music/Music';
 import {Settings} from './components/settings/Settings';
-import {ActionType, DialogsType, ProfileType} from './redux/state';
+import {ActionType, DialogsType, ProfileType} from './redux/store';
 
 type AppPropsType = {
     profile: ProfileType

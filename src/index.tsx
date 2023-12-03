@@ -1,9 +1,9 @@
 import React from 'react';
 import './index.css';
-import {store} from './redux/state';
 import App from './App';
 import ReactDOM from 'react-dom';
 import {BrowserRouter} from 'react-router-dom';
+import {store} from './redux/redux-store';
 
 const rerenderEntireTree = () => {
     ReactDOM.render(

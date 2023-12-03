@@ -1,11 +1,21 @@
-import {ActionType, ProfileType} from './state';
+import {ActionType, ProfileType} from './store';
 
 const onChangeNewPostAT = 'CHANGE-NEW-POST';
 const addPostAT = 'ADD-POST';
 
-export type ActionProfileType = addPostACType | onChangeNewPostACType;
+export type ActionProfileType = ReturnType<typeof addPostAC> | ReturnType<typeof onChangeNewPostAC>;
 
-export const profileReducer = (state: ProfileType, action: ActionType):ProfileType => {
+const initialState:ProfileType = {
+    'postData': [
+        {id: 1, postName: 'OOOOO', likesCount: 5},
+        {id: 2, postName: 'PPPPP', likesCount: 333},
+        {id: 3, postName: 'EEEEE', likesCount: 22},
+        {id: 4, postName: 'ХХХХХ', likesCount: 3}
+    ],
+    'newPostText': ''
+}
+
+export const profileReducer = (state: ProfileType = initialState, action: ActionType):ProfileType => {
     switch (action.type) {
         case addPostAT: {
             let newPost = {
