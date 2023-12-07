@@ -2,27 +2,26 @@ import React, {ChangeEvent} from 'react';
 import {DialogItem, DialogItemPropsType} from './dialogItem/DialogItem';
 import {Message, MessagePropsType} from './messageItem/MessageItem';
 import {S} from './Dialogs_Styles'
-import {ActionType} from '../../redux/store';
-import {addMessageAC, onChangeMessageAC} from '../../redux/dialog-reducer';
 
 type DialogsPropsType = {
     dialogData: Array<DialogItemPropsType>
     messagesData: MessagePropsType[]
     newMessageText: string
-    dispatch: (action: ActionType) => void
+    onChangeMessage: (message: string) => void
+    addNewMessage: () => void
 }
 
-export const Dialogs: React.FC<DialogsPropsType> = ({dialogData, messagesData, newMessageText, dispatch}) => {
+export const Dialogs: React.FC<DialogsPropsType> = ({dialogData, messagesData, newMessageText, onChangeMessage, addNewMessage}) => {
 
     let dialogItems = dialogData.map((dialog: DialogItemPropsType) => <DialogItem name={dialog.name} id={dialog.id}/>)
 
     let messageItems = messagesData.map((message: MessagePropsType) => <Message name={message.name} id={message.id}/>)
 
     const onChangeMessageHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
-        dispatch(onChangeMessageAC(e.currentTarget.value));
+        onChangeMessage(e.currentTarget.value)
     }
 
-    const addNewMessageHandler = () => dispatch(addMessageAC())
+    const addNewMessageHandler = () => addNewMessage();
 
     return (
         <S.Dialogs>
