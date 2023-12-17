@@ -22,7 +22,7 @@ export type StateType = {
 
 export type ActionType = ActionProfileType | ActionDialogType;
 
-type StoreType = {
+export type StoreType = {
     _state: StateType
     _callSubscriber: () => void
     getState: () => StateType

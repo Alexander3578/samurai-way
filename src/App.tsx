@@ -19,7 +19,7 @@ type AppPropsType = {
 }
 
 const App: React.FC<AppPropsType> = (props) => {
-    const {profile, dialogs, dispatch, newPostText, newMessageText} = props
+    const {profile, dispatch, newPostText} = props
 
     return (
         <div className="app-wrapper">
@@ -29,10 +29,7 @@ const App: React.FC<AppPropsType> = (props) => {
                 <Route path={'/profile'} render={() => <Profile postData={profile.postData}
                                                                 dispatch={dispatch}
                                                                 newPostText={newPostText}/>}/>
-                <Route path={'/dialogs'} render={() => <DialogsContainer dialogData={dialogs.dialogData}
-                                                                         messagesData={dialogs.messagesData}
-                                                                         newMessageText={newMessageText}
-                                                                         dispatch={dispatch}/>}/>
+                <Route path={'/dialogs'} render={() => <DialogsContainer/>}/>
                 <Route path={'/news'} render={() => <News/>}/>
                 <Route path={'/music'} render={() => <Music/>}/>
                 <Route path={'/settings'} render={() => <Settings/>}/>

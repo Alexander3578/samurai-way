@@ -4,28 +4,34 @@ import {MessagePropsType} from './messageItem/MessageItem';
 import {ActionType} from '../../redux/store';
 import {addMessageAC, onChangeMessageAC} from '../../redux/dialog-reducer';
 import {Dialogs} from './Dialogs';
+import {connect} from 'react-redux';
+import {AppStateType} from '../../redux/redux-store';
 
-type DialogsPropsType = {
+type MapStateToPropsType = {
     dialogData: Array<DialogItemPropsType>
     messagesData: MessagePropsType[]
     newMessageText: string
-    dispatch: (action: ActionType) => void
 }
 
-export const DialogsContainer: React.FC<DialogsPropsType> = ({dialogData, messagesData, newMessageText, dispatch}) => {
+type MapDispatchToPropsType = {
+    onChangeMessage: (message: string) => void
+    addNewMessage: () => void
+}
 
-    const onChangeMessageHandler = (message: string) => {
-        dispatch(onChangeMessageAC(message));
+export type DialogsPropsType = MapStateToPropsType & MapDispatchToPropsType
+
+let mapStateToProps = (state: AppStateType): MapStateToPropsType => {
+    return {
+        dialogData: state.dialogs.dialogData,
+        messagesData: state.dialogs.messagesData,
+        newMessageText: state.dialogs.newMessage
     }
+}
 
-    const addNewMessageHandler = () => dispatch(addMessageAC())
-
-    return (
-    <Dialogs dialogData={dialogData}
-             messagesData={messagesData}
-             newMessageText={newMessageText}
-             onChangeMessage={onChangeMessageHandler}
-             addNewMessage={addNewMessageHandler}/>
-    );
-};
-
+let mapDispatchToProps = (dispatch: (action: ActionType) => void): MapDispatchToPropsType => {
+    return {
+        onChangeMessage: (message: string) => dispatch(onChangeMessageAC(message)),
+        addNewMessage: () => dispatch(addMessageAC())
+    }
+}
+export const DialogsContainer = connect(mapStateToProps, mapDispatchToProps)(Dialogs);

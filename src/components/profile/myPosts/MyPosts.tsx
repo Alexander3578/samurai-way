@@ -1,18 +1,10 @@
 import React, {ChangeEvent} from 'react';
 import {Post, PostPropsType} from './post/Post';
 import s from './MyPosts.module.css'
-
-type MyPostsPropsType = {
-    postData: PostPropsType[]
-    newPostText: string
-    addPost: () => void
-    updateNewPost: (text: string) => void
-}
+import {MyPostsPropsType} from './post/MyPostsContainer';
 
 export const MyPosts: React.FC<MyPostsPropsType> = (props) => {
     const {postData, newPostText, addPost, updateNewPost} = props
-
-    // const newPost = useRef<HTMLTextAreaElement>(null);
 
     const addPostHandler = (): void => {
             addPost();
