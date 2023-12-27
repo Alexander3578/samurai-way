@@ -3,7 +3,7 @@ import { S } from '../Dialogs_Styles';
 
 export type MessagePropsType = {
     name: string
-    id: number
+    id: string
 }
 
 export const Message:React.FC<MessagePropsType> = (props) => {

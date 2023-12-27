@@ -3,7 +3,7 @@ import {Post, PostPropsType} from './post/Post';
 import s from './MyPosts.module.css'
 import {MyPostsPropsType} from './post/MyPostsContainer';
 
-export const MyPosts: React.FC<MyPostsPropsType> = (props) => {
+export const MyPosts: React.FC<MyPostsPropsType> = (props: MyPostsPropsType) => {
     const {postData, newPostText, addPost, updateNewPost} = props
 
     const addPostHandler = (): void => {

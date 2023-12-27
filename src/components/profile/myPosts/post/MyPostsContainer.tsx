@@ -1,10 +1,10 @@
 import React from 'react';
 import {MyPosts} from '../MyPosts';
 import {PostPropsType} from './Post';
-import {ActionType} from '../../../../redux/store';
 import {addPostAC, onChangeNewPostAC} from '../../../../redux/profile-reducer';
 import {connect} from 'react-redux';
 import {AppStateType} from '../../../../redux/redux-store';
+import {ActionType} from '../../../../redux';
 
 type MapStateToPropsType = {
     postData: PostPropsType[]

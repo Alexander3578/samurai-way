@@ -1,11 +1,11 @@
 import React from 'react';
 import {DialogItemPropsType} from './dialogItem/DialogItem';
 import {MessagePropsType} from './messageItem/MessageItem';
-import {ActionType} from '../../redux/store';
 import {addMessageAC, onChangeMessageAC} from '../../redux/dialog-reducer';
 import {Dialogs} from './Dialogs';
 import {connect} from 'react-redux';
 import {AppStateType} from '../../redux/redux-store';
+import {ActionType} from '../../redux';
 
 type MapStateToPropsType = {
     dialogData: Array<DialogItemPropsType>

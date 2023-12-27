@@ -3,7 +3,7 @@ import { S } from '../Dialogs_Styles';
 
 export type DialogItemPropsType = {
     name: string
-    id: number
+    id: string
 }
 
 export const DialogItem:React.FC<DialogItemPropsType> = ({name, id}) => {

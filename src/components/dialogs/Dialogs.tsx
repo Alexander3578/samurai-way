@@ -6,9 +6,9 @@ import {DialogsPropsType} from './DialogsContainer';
 
 export const Dialogs: React.FC<DialogsPropsType> = ({dialogData, messagesData, newMessageText, onChangeMessage, addNewMessage}) => {
 
-    let dialogItems = dialogData.map((dialog: DialogItemPropsType) => <DialogItem name={dialog.name} id={dialog.id}/>)
+    let dialogItems = dialogData.map((dialog: DialogItemPropsType) => <DialogItem key={dialog.id} name={dialog.name} id={dialog.id}/>)
 
-    let messageItems = messagesData.map((message: MessagePropsType) => <Message name={message.name} id={message.id}/>)
+    let messageItems = messagesData.map((message: MessagePropsType) => <Message key={message.id} name={message.name} id={message.id}/>)
 
     const onChangeMessageHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
         onChangeMessage(e.currentTarget.value)
