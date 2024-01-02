@@ -6,18 +6,18 @@ const setUsersAD = 'SET-USERS'
 
 export type ActionUsersType = ReturnType<typeof followAC> | ReturnType<typeof unfollowAC> |  ReturnType<typeof setUsersAC>;
 
-type UsersAddressType = {
-    city: string
-    country: string
+type PhotosType = {
+    large: string
+    small: string
 }
 
 export type UsersType = {
-    id: string
-    photo: string
+    id: number
+    photos: PhotosType
     followed: boolean
-    fullName: string
-    status: string
-    address: UsersAddressType
+    name: string
+    status: string | null
+    uniqueUrlName: string | null
 }
 
 type InitialStateType = {
@@ -48,7 +48,7 @@ export const usersReducer = (state: InitialStateType = initialState, action: Act
     }
 }
 
-export const followAC = (id: string) => {
+export const followAC = (id: number) => {
     return {
         type: followAD,
         payload: {
@@ -56,7 +56,7 @@ export const followAC = (id: string) => {
         }
     } as const
 }
-export const unfollowAC = (id: string) => {
+export const unfollowAC = (id: number) => {
     return {
         type: unfollowAD,
         payload: {

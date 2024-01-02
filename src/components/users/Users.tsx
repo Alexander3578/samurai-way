@@ -1,75 +1,52 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {UsersPropsType} from './UsersContainer';
-import {v1} from 'uuid';
+import axios from 'axios';
+import avatar from '../../assets/images/23ba420de78f87c008bf699e6eaddc9b.jpg'
+import {UsersType} from '../../redux/users-reducer';
 
 
-export const Users: React.FC<UsersPropsType> = ({users, setUsers, unfollow, follow}: UsersPropsType) => {
+export class Users extends React.Component<UsersPropsType, UsersPropsType> {
 
-    useEffect(() => {
-        setUsers([
-            {
-                id: v1(),
-                photo: 'https://i.pinimg.com/originals/23/ba/42/23ba420de78f87c008bf699e6eaddc9b.jpg',
-                followed: true,
-                fullName: 'Alex',
-                status: 'Angel',
-                address: {city: 'Minsk', country: 'Belarus'}
-            },
-            {
-                id: v1(), photo: 'https://i.pinimg.com/originals/23/ba/42/23ba420de78f87c008bf699e6eaddc9b.jpg',
-                followed: false,
-                fullName: 'Max',
-                status: 'Boss',
-                address: {city: 'Minsk', country: 'Belarus'}
-            },
-            {
-                id: v1(),
-                photo: 'https://i.pinimg.com/originals/23/ba/42/23ba420de78f87c008bf699e6eaddc9b.jpg',
-                followed: true,
-                fullName: 'Gleb',
-                status: 'Business',
-                address: {city: 'Los-Angeles', country: 'USA'}
-            },
-            {
-                id: v1(),
-                photo: 'https://i.pinimg.com/originals/23/ba/42/23ba420de78f87c008bf699e6eaddc9b.jpg',
-                followed: false,
-                fullName: 'Nasty',
-                status: 'Fuck', address: {city: 'Madrid', country: 'Spain'}
-            }
-        ])
-    }, [])
+    componentDidMount() {
+        axios.get('https://social-network.samuraijs.com/api/1.0/users')
+            .then((objUsers) => {
+                this.props.setUsers(objUsers.data.items)
+            })
+    }
 
-    let usersList = users.map(u =>
-        <div key={u.id}>
-            <span>
-                <div>
-                    <img src={u.photo} style={{width: '40px', height: '40px', borderRadius: '50%'}}
-                         alt='users avatar'/>
-                </div>
-                <div>
-                    {u.followed ?
-                        <button onClick={() => unfollow(u.id)}>Unfollow</button> :
-                        <button onClick={() => follow(u.id)}>Follow</button>
-                    }
-                </div>
-            </span>
-            <span>
-                <span>
-                    <div>{u.fullName}</div>
-                    <div>{u.status}</div>
-                </span>
-                <span>
-                    <div>{u.address.city}</div>
-                    <div>{u.address.country}</div>
-                </span>
-            </span>
-        </div>)
-
-    return (
-        <div>
-            {usersList}
-        </div>
-    );
-};
+    render() {
+        return <>
+            <div>
+                {
+                this.props.users.map((u: UsersType) =>
+                    <div key={u.id}>
+                    <span>
+                        <div>
+                            <img src={u.photos.small !== null ? u.photos.small : avatar}
+                                 style={{width: '40px', height: '40px', borderRadius: '50%'}}
+                                 alt="users avatar"/>
+                        </div>
+                        <div>
+                            {u.followed ?
+                                <button onClick={() => this.props.unfollow(u.id)}>Unfollow</button> :
+                                <button onClick={() => this.props.follow(u.id)}>Follow</button>
+                            }
+                        </div>
+                    </span>
+                        <span>
+                        <span>
+                            <div>{u.name}</div>
+                            <div>{u.status}</div>
+                        </span>
+                            {/*<span>*/}
+                            {/*    <div>{u.address.city}</div>*/}
+                            {/*    <div>{u.address.country}</div>*/}
+                            {/*</span>*/}
+                    </span>
+                    </div>)
+                }
+            </div>
+        </>
+    }
+}
 
