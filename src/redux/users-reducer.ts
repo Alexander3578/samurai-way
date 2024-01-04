@@ -3,8 +3,10 @@ import {ActionType} from './index';
 const followAD = 'FOLLOW'
 const unfollowAD = 'UNFOLLOW'
 const setUsersAD = 'SET-USERS'
+const setCurrentPageAD = 'SET-CURRENT-PAGE'
+const setTotalUsersCountAD = 'SET-TOTAL-USERS'
 
-export type ActionUsersType = ReturnType<typeof followAC> | ReturnType<typeof unfollowAC> |  ReturnType<typeof setUsersAC>;
+export type ActionUsersType = ReturnType<typeof followAC> | ReturnType<typeof unfollowAC> |  ReturnType<typeof setUsersAC> | ReturnType<typeof setCurrentPageAC> | ReturnType<typeof setTotalUsersCountAC>;
 
 type PhotosType = {
     large: string
@@ -22,10 +24,16 @@ export type UsersType = {
 
 type InitialStateType = {
     users: UsersType[]
+    totalCount: number
+    pageSize: number
+    currentPage: number
 }
 
 const initialState:InitialStateType = {
-    users: []
+    users: [],
+    totalCount: 0,
+    pageSize: 5,
+    currentPage: 1
 }
 
 export const usersReducer = (state: InitialStateType = initialState, action: ActionType) => {
@@ -40,7 +48,19 @@ export const usersReducer = (state: InitialStateType = initialState, action: Act
         }
         case setUsersAD: {
             return {...state,
-                users: [...state.users, ...action.payload.users] }
+                users: action.payload.users }
+        }
+        case setCurrentPageAD: {
+            return {
+                ...state,
+                currentPage: action.payload.currentPage
+            }
+        }
+        case setTotalUsersCountAD: {
+            return {
+                ...state,
+                totalCount: action.payload.totalUsersCount
+            }
         }
         default: {
             return state;
@@ -70,6 +90,24 @@ export const setUsersAC = (users: UsersType[]) => {
         type: setUsersAD,
         payload: {
             users
+        }
+    } as const
+}
+
+export const setCurrentPageAC = (currentPage: number) => {
+    return {
+        type:setCurrentPageAD,
+        payload: {
+            currentPage
+        }
+    } as const
+}
+
+export const setTotalUsersCountAC = (totalUsersCount: number) => {
+    return {
+        type:setTotalUsersCountAD,
+        payload: {
+            totalUsersCount
         }
     } as const
 }
