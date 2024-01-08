@@ -5,8 +5,9 @@ const unfollowAD = 'UNFOLLOW'
 const setUsersAD = 'SET-USERS'
 const setCurrentPageAD = 'SET-CURRENT-PAGE'
 const setTotalUsersCountAD = 'SET-TOTAL-USERS'
+const togglePreloaderAD = 'TOGGLE-PRELOADER'
 
-export type ActionUsersType = ReturnType<typeof followAC> | ReturnType<typeof unfollowAC> |  ReturnType<typeof setUsersAC> | ReturnType<typeof setCurrentPageAC> | ReturnType<typeof setTotalUsersCountAC>;
+export type ActionUsersType = ReturnType<typeof followAC> | ReturnType<typeof unfollowAC> |  ReturnType<typeof setUsersAC> | ReturnType<typeof setCurrentPageAC> | ReturnType<typeof setTotalUsersCountAC> | ReturnType<typeof togglePreloaderAC>;
 
 type PhotosType = {
     large: string
@@ -27,13 +28,15 @@ type InitialStateType = {
     totalCount: number
     pageSize: number
     currentPage: number
+    isFetching: boolean
 }
 
 const initialState:InitialStateType = {
     users: [],
     totalCount: 0,
     pageSize: 5,
-    currentPage: 1
+    currentPage: 1,
+    isFetching: true
 }
 
 export const usersReducer = (state: InitialStateType = initialState, action: ActionType) => {
@@ -60,6 +63,12 @@ export const usersReducer = (state: InitialStateType = initialState, action: Act
             return {
                 ...state,
                 totalCount: action.payload.totalUsersCount
+            }
+        }
+        case togglePreloaderAD: {
+            return {
+                ...state,
+                isFetching: action.payload.isFetching
             }
         }
         default: {
@@ -108,6 +117,15 @@ export const setTotalUsersCountAC = (totalUsersCount: number) => {
         type:setTotalUsersCountAD,
         payload: {
             totalUsersCount
+        }
+    } as const
+}
+
+export const togglePreloaderAC = (isFetching: boolean) => {
+    return {
+        type:togglePreloaderAD,
+        payload: {
+            isFetching
         }
     } as const
 }
