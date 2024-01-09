@@ -5,13 +5,39 @@ import {PostPropsType} from '../components/profile/myPosts/post/Post';
 
 const onChangeNewPostAT = 'CHANGE-NEW-POST';
 const addPostAT = 'ADD-POST';
+const setUserProfileAT = 'SET-USER-PROFILE';
+
+export type ProfileUserType = {
+	aboutMe: string;
+	contacts: ProfileUserTypeContacts;
+	lookingForAJob: boolean;
+	lookingForAJobDescription: string;
+	fullName: string;
+	userId: number;
+	photos: ProfileUserTypePhotos;
+}
+export type ProfileUserTypeContacts = {
+	facebook: string | null;
+	website: string | null;
+	vk: string | null;
+	twitter: string | null;
+	instagram: string | null;
+	youtube: string | null;
+	github: string;
+	mainLink: string | null;
+}
+export type ProfileUserTypePhotos = {
+	small: string;
+	large: string;
+}
 
 export type ProfileType = {
     postData: Array<PostPropsType>
     newPostText: string
+    profile: null | ProfileUserType
 }
 
-export type ActionProfileType = ReturnType<typeof addPostAC> | ReturnType<typeof onChangeNewPostAC>;
+export type ActionProfileType = ReturnType<typeof addPostAC> | ReturnType<typeof onChangeNewPostAC> | ReturnType<typeof setUserProfileAC>;
 
 const initialState: ProfileType = {
     'postData': [
@@ -20,7 +46,8 @@ const initialState: ProfileType = {
         {id: v1(), postName: 'EEEEE', likesCount: 22},
         {id: v1(), postName: 'ХХХХХ', likesCount: 3}
     ],
-    'newPostText': ''
+    'newPostText': '',
+    'profile': null
 }
 
 export const profileReducer = (state: ProfileType = initialState, action: ActionType): ProfileType => {
@@ -34,6 +61,9 @@ export const profileReducer = (state: ProfileType = initialState, action: Action
         }
         case onChangeNewPostAT: {
             return {...state, newPostText: action.payload.postName}
+        }
+        case setUserProfileAT: {
+            return {...state, profile: action.payload.profile}
         }
         default:
             return state
@@ -54,6 +84,15 @@ export const onChangeNewPostAC = (newPostText: string) => {
         type: onChangeNewPostAT,
         payload: {
             postName: newPostText,
+        }
+    } as const
+}
+
+export const setUserProfileAC = (profile: ProfileUserType) => {
+    return {
+        type: setUserProfileAT,
+        payload: {
+            profile,
         }
     } as const
 }

@@ -3,7 +3,6 @@ import './App.css';
 import Header from './components/header/Header';
 import {Navber} from './components/navbar/Navber';
 import {Route} from 'react-router-dom';
-import {Profile} from './components/profile/Profile';
 import {News} from './components/news/News';
 import {Music} from './components/music/Music';
 import {Settings} from './components/settings/Settings';
@@ -12,6 +11,7 @@ import {UsersContainer} from './components/users/UsersContainer';
 import {DialogsType} from './redux/dialog-reducer';
 import {ActionType} from './redux';
 import {ProfileType} from './redux/profile-reducer';
+import {ProfileContainer} from './components/profile/ProfileContainer';
 
 type AppPropsType = {
     profile: ProfileType
@@ -22,16 +22,12 @@ type AppPropsType = {
 }
 
 const App: React.FC<AppPropsType> = (props) => {
-    const {profile, dispatch, newPostText} = props
-
     return (
         <div className="app-wrapper">
             <Header/>
             <Navber/>
             <div className="app-wrapper-content">
-                <Route path={'/profile'} render={() => <Profile postData={profile.postData}
-                                                                dispatch={dispatch}
-                                                                newPostText={newPostText}/>}/>
+                <Route path={'/profile/:userId?'} render={() => <ProfileContainer />}/>
                 <Route path={'/dialogs'} render={() => <DialogsContainer/>}/>
                 <Route path={'/users'} render={() => <UsersContainer />}/>
                 <Route path={'/news'} render={() => <News/>}/>
