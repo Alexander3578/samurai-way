@@ -23,7 +23,7 @@ export type UsersType = {
     uniqueUrlName: string | null
 }
 
-type InitialStateType = {
+type UsersStateType = {
     users: UsersType[]
     totalCount: number
     pageSize: number
@@ -31,7 +31,7 @@ type InitialStateType = {
     isFetching: boolean
 }
 
-const initialState:InitialStateType = {
+const initialState:UsersStateType = {
     users: [],
     totalCount: 0,
     pageSize: 5,
@@ -39,7 +39,7 @@ const initialState:InitialStateType = {
     isFetching: true
 }
 
-export const usersReducer = (state: InitialStateType = initialState, action: ActionType) => {
+export const usersReducer = (state: UsersStateType = initialState, action: ActionType) => {
     switch (action.type){
         case followAD: {
             return {...state,

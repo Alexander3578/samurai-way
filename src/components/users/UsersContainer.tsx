@@ -9,18 +9,18 @@ import {
     unfollowAC,
     UsersType
 } from '../../redux/users-reducer';
-import axios from 'axios';
 import {Users} from './Users';
 import {Preloader} from '../comman/Preloader';
+import { api } from '../../api/api';
 
 class UsersAPIComponent extends React.Component<UsersPropsType, UsersPropsType> {
 
     componentDidMount() {
         this.props.togglePreloader(true)
-        axios.get(`https://social-network.samuraijs.com/api/1.0/users?count=${this.props.pageSize}&page=${this.props.currentPage}`)
+       api['usersApi'].getUsers(this.props.pageSize, this.props.currentPage)
             .then((objUsers) => {
-                this.props.setUsers(objUsers.data.items)
-                this.props.setTotalUsersCount(objUsers.data.totalCount)
+                this.props.setUsers(objUsers.items)
+                this.props.setTotalUsersCount(objUsers.totalCount)
                 this.props.togglePreloader(false)
             })
     }
@@ -28,9 +28,9 @@ class UsersAPIComponent extends React.Component<UsersPropsType, UsersPropsType> 
     onChangeCurrentPageHandler = (pageNum: number) => {
         this.props.setCurrentPage(pageNum)
         this.props.togglePreloader(true)
-        axios.get(`https://social-network.samuraijs.com/api/1.0/users?count=${this.props.pageSize}&page=${pageNum}`)
+        api['usersApi'].getUsers(this.props.pageSize, pageNum)
             .then((objUsers) => {
-                this.props.setUsers(objUsers.data.items)
+                this.props.setUsers(objUsers.items)
                 this.props.togglePreloader(false)
             })
     }
@@ -46,6 +46,7 @@ class UsersAPIComponent extends React.Component<UsersPropsType, UsersPropsType> 
                          follow={this.props.follow}
                          unfollow={this.props.unfollow}
                          users={this.props.users}
+                         isAuth={this.props.isAuth}
                 />
             }
         </>
@@ -59,6 +60,7 @@ type MapStateToPropsType = {
     pageSize: number
     currentPage: number
     isFetching: boolean
+    isAuth: boolean
 }
 
 type MapDispatchToPropsType = {
@@ -78,7 +80,8 @@ let mapStateToProps = (state: AppStateType): MapStateToPropsType => {
         totalCount: state.usersPage.totalCount,
         pageSize: state.usersPage.pageSize,
         currentPage: state.usersPage.currentPage,
-        isFetching: state.usersPage.isFetching
+        isFetching: state.usersPage.isFetching,
+        isAuth: state.auth.isAuth
     }
 }
 

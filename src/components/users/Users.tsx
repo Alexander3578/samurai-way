@@ -3,6 +3,7 @@ import s from './Users.module.css';
 import {UsersType} from '../../redux/users-reducer';
 import avatar from '../../assets/images/23ba420de78f87c008bf699e6eaddc9b.jpg';
 import {NavLink} from 'react-router-dom';
+import {api} from '../../api/api';
 
 type UsersPropsType = {
     totalCount: number
@@ -12,6 +13,7 @@ type UsersPropsType = {
     follow: (userId: number) => void
     unfollow: (userId: number) => void
     users: UsersType[]
+    isAuth: boolean
 }
 
 export const Users: React.FC<UsersPropsType> = ({
@@ -21,13 +23,34 @@ export const Users: React.FC<UsersPropsType> = ({
                                                     pageSize,
                                                     unfollow,
                                                     follow,
-                                                    users
+                                                    users,
+                                                    isAuth
                                                 }: UsersPropsType) => {
 
     let pagesCount = Math.ceil(totalCount / pageSize);
     let pages = [];
     for (let i = 1; i <= pagesCount; i++) {
         pages.push(i);
+    }
+
+    const onFollowHandler = (userId: number) => {
+        if(isAuth){
+            api['usersApi'].follow(userId)
+                .then((objOnFollow) => {
+                    if(objOnFollow.resultCode === 0)
+                        follow(userId)
+                })
+        }
+    }
+
+    const onUnfollowHandler = (userId: number) => {
+        if(isAuth){
+            api['usersApi'].unfollow(userId)
+                .then((objOnFollow) => {
+                    if(objOnFollow.resultCode === 0)
+                        unfollow(userId)
+                })
+        }
     }
 
 
@@ -54,8 +77,8 @@ export const Users: React.FC<UsersPropsType> = ({
                         </div>
                         <div>
                             {u.followed ?
-                                <button onClick={() => unfollow(u.id)}>Unfollow</button> :
-                                <button onClick={() => follow(u.id)}>Follow</button>
+                                <button onClick={() => onUnfollowHandler(u.id)}>Unfollow</button> :
+                                <button onClick={() => onFollowHandler(u.id)}>Follow</button>
                             }
                         </div>
                     </span>

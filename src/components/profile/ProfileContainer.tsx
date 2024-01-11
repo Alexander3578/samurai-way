@@ -1,18 +1,18 @@
 import React from 'react';
-import axios from 'axios';
 import {Profile} from './Profile';
 import {connect} from 'react-redux';
 import {AppStateType} from '../../redux/redux-store';
 import {ProfileUserType, setUserProfileAC} from '../../redux/profile-reducer';
-import {withRouter} from 'react-router-dom';
+import {RouteComponentProps, withRouter} from 'react-router-dom';
+import {api} from '../../api/api';
 
-class ProfileApi extends React.Component<any, any>{
+class ProfileApi extends React.Component<PropsType, ProfilePropsType>{
 
     componentDidMount() {
-        let userId = this.props.match.params.userId ? this.props.match.params.userId : 2
-        axios.get(`https://social-network.samuraijs.com/api/1.0/profile/${userId}`)
-            .then(res => {
-                this.props.setUserProfile(res.data)
+        let userId = this.props.match.params.userId ? this.props.match.params.userId : 29740
+        api['profileApi'].getProfileUser(userId)
+            .then(data => {
+                this.props.setUserProfile(data)
             })
     }
 
@@ -22,17 +22,28 @@ class ProfileApi extends React.Component<any, any>{
         )
     };
 }
-export type ProfilePropsType = mapStateToPropsType
 
+export type ProfilePropsType = mapStateToPropsType & mapDispatchToPropsType
+
+type PropsType = RouteComponentProps<paramsType> & ProfilePropsType
 
 type mapStateToPropsType = {
     profile: ProfileUserType | null
+    authId: number | null
+}
+
+type mapDispatchToPropsType = {
+    setUserProfile: (profile: ProfileUserType) => void
+}
+
+type paramsType = {
+    userId: string
 }
 
 let mapStateToProps = (state: AppStateType):mapStateToPropsType => {
     return {
-        profile: state.profile.profile
-
+        profile: state.profile.profile,
+        authId: state.auth.id
     }
 }
 
