@@ -4,8 +4,7 @@ import {MessagePropsType} from './messageItem/MessageItem';
 import {addMessageAC, onChangeMessageAC} from '../../redux/dialog-reducer';
 import {Dialogs} from './Dialogs';
 import {connect} from 'react-redux';
-import {AppStateType} from '../../redux/redux-store';
-import {ActionType} from '../../redux';
+import {AppActionType, AppStateType} from '../../redux/redux-store';
 
 type MapStateToPropsType = {
     dialogData: Array<DialogItemPropsType>
@@ -28,7 +27,7 @@ let mapStateToProps = (state: AppStateType): MapStateToPropsType => {
     }
 }
 
-let mapDispatchToProps = (dispatch: (action: ActionType) => void): MapDispatchToPropsType => {
+let mapDispatchToProps = (dispatch: (action: AppActionType) => void): MapDispatchToPropsType => {
     return {
         onChangeMessage: (message: string) => dispatch(onChangeMessageAC(message)),
         addNewMessage: () => dispatch(addMessageAC())

@@ -3,8 +3,7 @@ import {MyPosts} from '../MyPosts';
 import {PostPropsType} from './Post';
 import {addPostAC, onChangeNewPostAC} from '../../../../redux/profile-reducer';
 import {connect} from 'react-redux';
-import {AppStateType} from '../../../../redux/redux-store';
-import {ActionType} from '../../../../redux';
+import {AppActionType, AppStateType} from '../../../../redux/redux-store';
 
 type MapStateToPropsType = {
     postData: PostPropsType[]
@@ -25,7 +24,7 @@ let mapStateToProps = (state: AppStateType): MapStateToPropsType => {
     }
 }
 
-let mapDispatchToProps = (dispatch: (action: ActionType) => void): MapDispatchToPropsType => {
+let mapDispatchToProps = (dispatch: (action: AppActionType) => void): MapDispatchToPropsType => {
     return {
         updateNewPost: (text: string) => {
             dispatch((onChangeNewPostAC(text)))

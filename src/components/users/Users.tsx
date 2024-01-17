@@ -3,17 +3,17 @@ import s from './Users.module.css';
 import {UsersType} from '../../redux/users-reducer';
 import avatar from '../../assets/images/23ba420de78f87c008bf699e6eaddc9b.jpg';
 import {NavLink} from 'react-router-dom';
-import {api} from '../../api/api';
 
 type UsersPropsType = {
     totalCount: number
     onChangeCurrentPage: (pageNum: number) => void
     pageSize: number
     currentPage: number
-    follow: (userId: number) => void
-    unfollow: (userId: number) => void
+    follow: (userId: number, isAuth: boolean) => void
+    unfollow: (userId: number, isAuth: boolean) => void
     users: UsersType[]
     isAuth: boolean
+    followingInProgress: number[]
 }
 
 export const Users: React.FC<UsersPropsType> = ({
@@ -24,7 +24,8 @@ export const Users: React.FC<UsersPropsType> = ({
                                                     unfollow,
                                                     follow,
                                                     users,
-                                                    isAuth
+                                                    isAuth,
+                                                    followingInProgress
                                                 }: UsersPropsType) => {
 
     let pagesCount = Math.ceil(totalCount / pageSize);
@@ -34,25 +35,12 @@ export const Users: React.FC<UsersPropsType> = ({
     }
 
     const onFollowHandler = (userId: number) => {
-        if(isAuth){
-            api['usersApi'].follow(userId)
-                .then((objOnFollow) => {
-                    if(objOnFollow.resultCode === 0)
-                        follow(userId)
-                })
-        }
+        follow(userId, isAuth)
     }
 
     const onUnfollowHandler = (userId: number) => {
-        if(isAuth){
-            api['usersApi'].unfollow(userId)
-                .then((objOnFollow) => {
-                    if(objOnFollow.resultCode === 0)
-                        unfollow(userId)
-                })
-        }
+        unfollow(userId, isAuth)
     }
-
 
     return (
         <div>
@@ -77,8 +65,14 @@ export const Users: React.FC<UsersPropsType> = ({
                         </div>
                         <div>
                             {u.followed ?
-                                <button onClick={() => onUnfollowHandler(u.id)}>Unfollow</button> :
-                                <button onClick={() => onFollowHandler(u.id)}>Follow</button>
+                                <button onClick={() => onUnfollowHandler(u.id)}
+                                        disabled={followingInProgress.some(id => id === u.id)}>
+                                    Unfollow
+                                </button> :
+                                <button onClick={() => onFollowHandler(u.id)}
+                                        disabled={followingInProgress.some(id => id === u.id)}>
+                                    Follow
+                                </button>
                             }
                         </div>
                     </span>

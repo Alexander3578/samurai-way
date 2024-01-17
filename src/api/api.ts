@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {AuthResponseType} from '../redux/auth-reducer';
 
 const instance = axios.create({
     baseURL: 'https://social-network.samuraijs.com/api/1.0',
@@ -34,10 +35,8 @@ export const api = {
     },
 
     auth: () => {
-        return  instance.get(`/auth/me`)
+        return  instance.get<AuthResponseType>(`/auth/me`)
             .then(res => res.data)
     },
-
-
 
 }

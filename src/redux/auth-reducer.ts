@@ -1,3 +1,6 @@
+import {Dispatch} from 'redux';
+import {AppActionType} from './redux-store';
+import {api} from '../api/api';
 
 const setUserAuthDataAT = 'SET-USER-AUTH-DATA'
 
@@ -17,7 +20,7 @@ type AuthDataType = AuthResponseDataType & {
     isAuth: boolean
 }
 
-type ActionAuthType = ReturnType<typeof setUserAuthDataAC>
+export type ActionAuthType = ReturnType<typeof setUserAuthDataAC>
 
 const initialState = {
     id: null,
@@ -47,3 +50,12 @@ export const setUserAuthDataAC = (data: AuthResponseDataType) => ({
         data
     }
 } as const)
+
+export const authTC = () =>
+    (dispatch: Dispatch<AppActionType>) => {
+        api.auth()
+            .then((authObj) => {
+                if(authObj.resultCode === 0)
+                    dispatch(setUserAuthDataAC(authObj.data))
+            })
+    }

@@ -8,15 +8,15 @@ import {Settings} from './components/settings/Settings';
 import {DialogsContainer} from './components/dialogs/DialogsContainer';
 import {UsersContainer} from './components/users/UsersContainer';
 import {DialogsType} from './redux/dialog-reducer';
-import {ActionType} from './redux';
 import {ProfileType} from './redux/profile-reducer';
 import {ProfileContainer} from './components/profile/ProfileContainer';
 import {HeaderContainer} from './components/header/HeaderContainer';
+import {AppActionType} from './redux/redux-store';
 
 type AppPropsType = {
     profile: ProfileType
     dialogs: DialogsType
-    dispatch: (action: ActionType) => void
+    dispatch: (action: AppActionType) => void
     newPostText: string
     newMessageText: string
 }

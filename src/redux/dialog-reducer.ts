@@ -1,4 +1,3 @@
-import {ActionType} from './index';
 import {v1} from 'uuid';
 import {DialogItemPropsType} from '../components/dialogs/dialogItem/DialogItem';
 import {MessagePropsType} from '../components/dialogs/messageItem/MessageItem';
@@ -32,7 +31,7 @@ const initialState: DialogsType = {
     'newMessage': ''
 }
 
-export const dialogReducer = (state: DialogsType = initialState, action: ActionType): DialogsType => {
+export const dialogReducer = (state: DialogsType = initialState, action: ActionDialogType): DialogsType => {
     switch (action.type) {
         case onChangeNewMessageAT: {
             return {...state, newMessage: action.payload.newMessage};

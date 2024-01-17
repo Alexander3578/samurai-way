@@ -1,7 +1,8 @@
-import {ActionType} from './index';
 import {v1} from 'uuid';
 import {PostPropsType} from '../components/profile/myPosts/post/Post';
-
+import {Dispatch} from 'redux';
+import {AppActionType} from './redux-store';
+import {api} from '../api/api';
 
 const onChangeNewPostAT = 'CHANGE-NEW-POST';
 const addPostAT = 'ADD-POST';
@@ -50,7 +51,7 @@ const initialState: ProfileType = {
     'profile': null
 }
 
-export const profileReducer = (state: ProfileType = initialState, action: ActionType): ProfileType => {
+export const profileReducer = (state: ProfileType = initialState, action: ActionProfileType): ProfileType => {
     switch (action.type) {
         case addPostAT: {
             return {...state, postData: [{
@@ -96,3 +97,11 @@ export const setUserProfileAC = (profile: ProfileUserType) => {
         }
     } as const
 }
+
+export const getProfileUserTC = (userId: number | string) =>
+    (dispatch: Dispatch<AppActionType>) => {
+        api['profileApi'].getProfileUser(userId)
+            .then(data => {
+                dispatch(setUserProfileAC(data))
+            })
+    }
