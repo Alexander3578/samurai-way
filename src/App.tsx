@@ -12,6 +12,7 @@ import {ProfileType} from './redux/profile-reducer';
 import {ProfileContainer} from './components/profile/ProfileContainer';
 import {HeaderContainer} from './components/header/HeaderContainer';
 import {AppActionType} from './redux/redux-store';
+import {Login} from './components/login/Login';
 
 type AppPropsType = {
     profile: ProfileType
@@ -21,7 +22,7 @@ type AppPropsType = {
     newMessageText: string
 }
 
-const App: React.FC<AppPropsType> = (props) => {
+const App: React.FC<AppPropsType> = () => {
     return (
         <div className="app-wrapper">
             <HeaderContainer/>
@@ -33,6 +34,7 @@ const App: React.FC<AppPropsType> = (props) => {
                 <Route path={'/news'} render={() => <News/>}/>
                 <Route path={'/music'} render={() => <Music/>}/>
                 <Route path={'/settings'} render={() => <Settings/>}/>
+                <Route path={'/login'} render={() => <Login/>}/>
             </div>
         </div>
     );

@@ -1,5 +1,5 @@
 import {Dispatch} from 'redux';
-import {AppActionType, AppDispatch, AppThunk} from './redux-store';
+import {AppActionType, AppThunk} from './redux-store';
 import {api} from '../api/api';
 
 const followAD = 'FOLLOW'

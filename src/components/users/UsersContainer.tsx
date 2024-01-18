@@ -9,6 +9,7 @@ import {
 } from '../../redux/users-reducer';
 import {Users} from './Users';
 import {Preloader} from '../comman/Preloader';
+import {withAuthRedirect} from '../../hoc/AuthRedirect';
 
 class UsersAPIComponent extends React.Component<UsersPropsType, UsersPropsType> {
 
@@ -81,9 +82,9 @@ let mapStateToProps = (state: AppStateType): MapStateToPropsType => {
 //     }
 // }
 
-export const UsersContainer = connect(mapStateToProps, {
+export const UsersContainer = withAuthRedirect(connect(mapStateToProps, {
     follow: followTC,
     unfollow: unfollowTC,
     setUsers: setUsersTC,
-})(UsersAPIComponent);
+})(UsersAPIComponent));
 
