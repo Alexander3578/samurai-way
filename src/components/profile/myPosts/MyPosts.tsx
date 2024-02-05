@@ -1,19 +1,15 @@
-import React, {ChangeEvent} from 'react';
+import React from 'react';
 import {Post, PostPropsType} from './post/Post';
 import s from './MyPosts.module.css'
 import {MyPostsPropsType} from './post/MyPostsContainer';
+import {AddPostProfileForm, PostProfileFormType} from './addPostProfileForm/AddPostProfileForm';
 
 export const MyPosts: React.FC<MyPostsPropsType> = (props: MyPostsPropsType) => {
-    const {postData, newPostText, addPost, updateNewPost} = props
+    const {postData, addPost} = props
 
-    const addPostHandler = (): void => {
-            addPost();
+    const onAddPostSubmit = (postProfileFormValues: PostProfileFormType): void => {
+            addPost(postProfileFormValues.postText);
     }
-
-    const onPostChangeHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
-        updateNewPost(e.currentTarget.value);
-    }
-
 
     const postItems = postData.map((item: PostPropsType) => <Post key={item.id}
                                                                   postName={item.postName}
@@ -22,13 +18,7 @@ export const MyPosts: React.FC<MyPostsPropsType> = (props: MyPostsPropsType) => 
     return (
         <div className={s.postBlock}>
             <h3>My Posts</h3>
-            <div>
-                <textarea value={newPostText} onChange={onPostChangeHandler}></textarea>
-                <div>
-                    <button onClick={addPostHandler}>Add Post</button>
-                </div>
-
-            </div>
+            <AddPostProfileForm onSubmit={onAddPostSubmit}/>
             <div className={s.posts}>
                 {
                     postItems

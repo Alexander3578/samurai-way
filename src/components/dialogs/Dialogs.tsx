@@ -1,20 +1,25 @@
-import React, {ChangeEvent} from 'react';
+import React from 'react';
 import {DialogItem, DialogItemPropsType} from './dialogItem/DialogItem';
 import {Message, MessagePropsType} from './messageItem/MessageItem';
 import {S} from './Dialogs_Styles'
 import {DialogsPropsType} from './DialogsContainer';
+import {DialogMessageForm, SendMessageFormValuesType} from './dialogMessageForm/DialogMessageForm';
 
-export const Dialogs: React.FC<DialogsPropsType> = ({dialogData, messagesData, newMessageText, onChangeMessage, addNewMessage}) => {
+export const Dialogs: React.FC<DialogsPropsType> = ({
+                                                        dialogData,
+                                                        messagesData,
+                                                        addNewMessage
+                                                    }) => {
 
-    let dialogItems = dialogData.map((dialog: DialogItemPropsType) => <DialogItem key={dialog.id} name={dialog.name} id={dialog.id}/>)
+    let dialogItems = dialogData.map((dialog: DialogItemPropsType) => <DialogItem key={dialog.id} name={dialog.name}
+                                                                                  id={dialog.id}/>)
 
-    let messageItems = messagesData.map((message: MessagePropsType) => <Message key={message.id} name={message.name} id={message.id}/>)
+    let messageItems = messagesData.map((message: MessagePropsType) => <Message key={message.id} name={message.name}
+                                                                                id={message.id}/>)
 
-    const onChangeMessageHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
-        onChangeMessage(e.currentTarget.value)
+    const onSendMessageSubmit = (sendMessageFormValues: SendMessageFormValuesType) => {
+        addNewMessage(sendMessageFormValues.newMessageText)
     }
-
-    const addNewMessageHandler = () => addNewMessage();
 
     return (
         <S.Dialogs>
@@ -27,12 +32,7 @@ export const Dialogs: React.FC<DialogsPropsType> = ({dialogData, messagesData, n
                 {
                     messageItems
                 }
-                <S.SendMessageWrap>
-                    <S.MessageField value={newMessageText}
-                                    onChange={onChangeMessageHandler}
-                                    placeholder={'Enter your message!'}/>
-                    <S.SendMessageButton onClick={addNewMessageHandler}>Send</S.SendMessageButton>
-                </S.SendMessageWrap>
+                <DialogMessageForm onSubmit={onSendMessageSubmit}/>
             </S.Messages>
         </S.Dialogs>
     );

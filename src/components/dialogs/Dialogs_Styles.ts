@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import {NavLink} from 'react-router-dom';
+import {Field} from 'redux-form';
 
 //DIALOGS
 
@@ -32,18 +33,19 @@ const Message = styled.div`
 
 `
 
-const SendMessageWrap = styled.div`
+const SendMessageWrap = styled.form`
   display: flex;
   gap: 10px;
   margin-top: 5px;
 `
 
-const MessageField = styled.textarea`
+const MessageField = styled(Field)`
   resize: none;
+  outline: transparent;
 `
 
 const SendMessageButton = styled.button`
-  
+  height: 36px;
 `
 
 export const S = {

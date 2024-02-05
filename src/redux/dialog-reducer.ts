@@ -2,15 +2,13 @@ import {v1} from 'uuid';
 import {DialogItemPropsType} from '../components/dialogs/dialogItem/DialogItem';
 import {MessagePropsType} from '../components/dialogs/messageItem/MessageItem';
 
-const onChangeNewMessageAT = 'CHANGE-NEW-MESSAGE'
 const addMessageAT = 'ADD-MESSAGE';
 
-export type ActionDialogType = ReturnType<typeof onChangeMessageAC> | ReturnType<typeof addMessageAC>;
+export type ActionDialogType = ReturnType<typeof addMessageAC>;
 
 export type DialogsType = {
     dialogData: Array<DialogItemPropsType>
     messagesData: Array<MessagePropsType>
-    newMessage: string
 }
 
 const initialState: DialogsType = {
@@ -28,22 +26,17 @@ const initialState: DialogsType = {
         {id: v1(), name: 'Jack'},
         {id: v1(), name: 'Tom'},
     ],
-    'newMessage': ''
 }
 
 export const dialogReducer = (state: DialogsType = initialState, action: ActionDialogType): DialogsType => {
     switch (action.type) {
-        case onChangeNewMessageAT: {
-            return {...state, newMessage: action.payload.newMessage};
-        }
         case  addMessageAT: {
             return {
                 ...state,
                 messagesData: [...state['messagesData'], {
                     id: action.payload.id,
-                    name: state.newMessage,
+                    name: action.payload.newMessageBody
                 }],
-                newMessage: ''
             };
         }
         default:
@@ -51,18 +44,12 @@ export const dialogReducer = (state: DialogsType = initialState, action: ActionD
     }
 };
 
-export const onChangeMessageAC = (newMessage: string) => {
-    return {
-        type: onChangeNewMessageAT,
-        payload: {
-            newMessage
-        }
-    } as const
-}
+//ACTION CREATORS
 
-export const addMessageAC = () => ({
+export const addMessageAC = (newMessageBody: string) => ({
     type: addMessageAT,
     payload: {
-        id: v1()
+        id: v1(),
+        newMessageBody
     }
 } as const)

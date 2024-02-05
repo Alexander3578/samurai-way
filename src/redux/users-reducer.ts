@@ -172,6 +172,8 @@ export const toggleFollowingInProgressAC = (isFollowing: boolean, userId: number
     } as const
 }
 
+//THUNKS
+
 export const setUsersTC = (pageSize: number, currentPage: number): AppThunk =>
     (dispatch: Dispatch<AppActionType>) => {
 
