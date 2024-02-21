@@ -4,11 +4,11 @@ import s from './MyPosts.module.css'
 import {MyPostsPropsType} from './post/MyPostsContainer';
 import {AddPostProfileForm, PostProfileFormType} from './addPostProfileForm/AddPostProfileForm';
 
-export const MyPosts: React.FC<MyPostsPropsType> = (props: MyPostsPropsType) => {
+export const MyPosts: React.FC<MyPostsPropsType> = React.memo((props: MyPostsPropsType) => {
     const {postData, addPost} = props
 
     const onAddPostSubmit = (postProfileFormValues: PostProfileFormType): void => {
-            addPost(postProfileFormValues.postText);
+        addPost(postProfileFormValues.postText);
     }
 
     const postItems = postData.map((item: PostPropsType) => <Post key={item.id}
@@ -26,5 +26,5 @@ export const MyPosts: React.FC<MyPostsPropsType> = (props: MyPostsPropsType) => 
             </div>
         </div>
     );
-};
+});
 

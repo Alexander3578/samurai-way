@@ -1,13 +1,13 @@
 import React from 'react';
 import {Field, InjectedFormProps, reduxForm} from 'redux-form';
 import {FormControl} from '../comman/formControls/FormControls';
-import {requiredField} from '../../utils/validators/validators';
-import {LoginRequestData} from '../../api/api';
+import {requiredField} from 'utils/validators/validators';
+import {LoginRequestData} from 'api/api';
 import S from './../comman/formControls/FormControls.module.css'
 
-const LoginForm: React.FC<InjectedFormProps<LoginRequestData>> = (props) => {
+const LoginForm: React.FC<InjectedFormProps<LoginRequestData>> = ({handleSubmit, error, }) => {
     return (
-        <form onSubmit={props.handleSubmit}> {/*Прроисходит 3 действия: 1- e.preventDefault,
+        <form onSubmit={handleSubmit}> {/*Прроисходит 3 действия: 1- e.preventDefault,
         2- сбор всех данных и комплектация в объект для отправки, в конце вызво onSubmit(obj с данными)*/}
             <div>
                 {/*Field это обертка которая в качестве component приниает то, что является ребенком и принимает пропсы. Чьобы не писать
@@ -29,7 +29,7 @@ const LoginForm: React.FC<InjectedFormProps<LoginRequestData>> = (props) => {
             <div>
                 <Field type={'checkbox'} name={'rememberMe'} component={'input'}/> remember me
             </div>
-            {props.error && <div className={S.formCommonError}>{props.error}</div>}
+            {error && <div className={S.formCommonError}>{error}</div>}
             <div>
                 <button>Login</button>
             </div>

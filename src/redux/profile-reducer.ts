@@ -1,12 +1,14 @@
 import {v1} from 'uuid';
-import {PostPropsType} from '../components/profile/myPosts/post/Post';
+import {PostPropsType} from 'components/profile/myPosts/post/Post';
 import {Dispatch} from 'redux';
 import {AppActionType} from './redux-store';
-import {api} from '../api/api';
+import {api} from 'api/api';
 
 const addPostAT = 'ADD-POST';
-const setUserProfileAT = 'SET-USER-PROFILE';
-const setStatusProfileAT = 'SET-STATUS-PROFILE';
+const setUserProfileAT = 'samurai-network/profile/SET-USER-PROFILE';
+const setStatusProfileAT = 'samurai-network/profile/SET-STATUS-PROFILE';
+const deletePostProfileAT = 'samurai-network/profile/DELETE-POST-PROFILE';
+const updatePhotoProfileAT = 'samurai-network/profile/UPDATE-PHOTO-PROFILE';
 
 export type ProfileUserType = {
     aboutMe: string;
@@ -41,7 +43,9 @@ export type ProfileType = {
 export type ActionProfileType =
     ReturnType<typeof addPostAC>
     | ReturnType<typeof setUserProfileAC>
-    | ReturnType<typeof setStatusProfileAC>;
+    | ReturnType<typeof setStatusProfileAC>
+    | ReturnType<typeof deletePostProfileAC>
+    | ReturnType<typeof updatePhotoProfileAC>;
 
 const initialState: ProfileType = {
     'postData': [
@@ -70,6 +74,12 @@ export const profileReducer = (state: ProfileType = initialState, action: Action
         }
         case setStatusProfileAT: {
             return {...state, status: action.payload.status}
+        }
+        case deletePostProfileAT: {
+            return {...state, postData: state['postData'].filter(post => post.id !== action.payload.postId)}
+        }
+        case updatePhotoProfileAT: {
+            return {...state, profile: {...state.profile, ...action.payload.photos} as ProfileUserType}
         }
         default:
             return state
@@ -103,30 +113,48 @@ export const setStatusProfileAC = (status: string) => {
     } as const
 }
 
+export const deletePostProfileAC = (postId: string) => {
+    return {
+        type: deletePostProfileAT,
+        payload: {
+            postId,
+        }
+    } as const
+}
+
+export const updatePhotoProfileAC = (photos: ProfileUserTypePhotos) => {
+    return {
+        type: updatePhotoProfileAT,
+        payload: {
+            photos,
+        }
+    } as const
+}
+
 //THUNKS
 
 export const getProfileUserTC = (userId: number) =>
-    (dispatch: Dispatch<AppActionType>) => {
-        api['profileApi'].getProfileUser(userId)
-            .then(data => {
-                dispatch(setUserProfileAC(data))
-            })
+    async (dispatch: Dispatch<AppActionType>) => {
+        const data = await api['profileApi'].getProfileUser(userId)
+        dispatch(setUserProfileAC(data))
     }
 
 export const getProfileStatusTC = (userId: number) =>
-    (dispatch: Dispatch<AppActionType>) => {
-        api['profileApi'].getProfileStatus(userId)
-            .then(data => {
-                console.log(data)
-                dispatch(setStatusProfileAC(data))
-            })
+    async (dispatch: Dispatch<AppActionType>) => {
+        const data = await api['profileApi'].getProfileStatus(userId)
+        dispatch(setStatusProfileAC(data))
     }
 
-    export const updateProfileStatusTC = (status: string) =>
-    (dispatch: Dispatch<AppActionType>) => {
-        api['profileApi'].updateProfileStatus(status)
-            .then(data => {
-                if(data.resultCode === 0)
-                dispatch(setStatusProfileAC(status))
-            })
+export const updateProfileStatusTC = (status: string) =>
+    async (dispatch: Dispatch<AppActionType>) => {
+        const data = await api['profileApi'].updateProfileStatus(status)
+        if (data.resultCode === 0)
+            dispatch(setStatusProfileAC(status))
+    }
+
+export const updatePhotoTC = (photo: File) =>
+    async (dispatch: Dispatch<AppActionType>) => {
+        const data = await api['profileApi'].updateProfilePhoto(photo)
+        if (data.resultCode === 0)
+            dispatch(updatePhotoProfileAC(data.data))
     }

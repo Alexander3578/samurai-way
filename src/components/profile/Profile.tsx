@@ -10,7 +10,8 @@ export const Profile: React.FC<ProfilePropsType> = (props) => {
             <ProfileInfo profile = {props.profile}
                          status={props.status}
                          updateProfileStatus={props.updateProfileStatus}
-                         authId={props.authId}/>
+                         authId={props.authId}
+                         updatePhoto={props.updatePhoto}/>
             <MyPostsContainer/>
         </div>
     );

@@ -3,23 +3,32 @@ import {Profile} from './Profile';
 import {connect} from 'react-redux';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
 import {compose} from 'redux';
-import {AppStateType} from '../../redux/redux-store';
-import {withAuthRedirect} from '../../hoc/AuthRedirect';
+import {AppStateType} from 'redux/redux-store';
+import {withAuthRedirect} from 'hoc/AuthRedirect';
 import {
     getProfileStatusTC,
     getProfileUserTC,
     ProfileUserType,
+    updatePhotoTC,
     updateProfileStatusTC
-} from '../../redux/profile-reducer';
+} from 'redux/profile-reducer';
 
 class ProfileApi extends React.Component<PropsType, ProfilePropsType> {
 
-    componentDidMount() {
-        debugger;
+    refreshProfile() {
         let userId = this.props.match.params.userId && this.props.match.params.userId !== ':userId'
             ? this.props.match.params.userId : this.props.authId
         this.props.getProfileUser(Number(userId));
         this.props.getProfileStatus(Number(userId))
+    }
+
+    componentDidMount() {
+        this.refreshProfile();
+    }
+
+    componentDidUpdate(prevProps: Readonly<PropsType>, prevState: Readonly<ProfilePropsType>) {
+        if(this.props.match.params.userId !== prevProps.match.params.userId)
+        this.refreshProfile();
     }
 
     render() {
@@ -28,7 +37,8 @@ class ProfileApi extends React.Component<PropsType, ProfilePropsType> {
                      profile={this.props.profile}
                      status={this.props.status}
                      updateProfileStatus={this.props.updateProfileStatus}
-                     authId={this.props.authId}/>
+                     authId={this.props.authId}
+                     updatePhoto={this.props.updatePhoto} />
         )
     };
 }
@@ -47,6 +57,7 @@ type mapDispatchToPropsType = {
     getProfileUser: (userId: number | null) => void
     getProfileStatus: (userId: number | null) => void
     updateProfileStatus: (status: string) => void
+    updatePhoto: (photo: File) => void
 }
 
 type paramsType = {
@@ -65,11 +76,11 @@ let mapStateToProps = (state: AppStateType): mapStateToPropsType => {
 
 // export const ProfileContainer = withAuthRedirect(connect(mapStateToProps, {getProfileUser: getProfileUserTC})(withURLDataContainerComponent))
 
-export const ProfileContainer = compose<React.ComponentType>(
+export default compose<React.ComponentType>(
     withAuthRedirect,
     connect(mapStateToProps, {
         getProfileUser: getProfileUserTC, getProfileStatus: getProfileStatusTC,
-        updateProfileStatus: updateProfileStatusTC
+        updateProfileStatus: updateProfileStatusTC, updatePhoto: updatePhotoTC
     }),
     withRouter,
 )(ProfileApi)

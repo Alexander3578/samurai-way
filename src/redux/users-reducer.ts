@@ -1,14 +1,15 @@
 import {Dispatch} from 'redux';
 import {AppActionType, AppThunk} from './redux-store';
-import {api} from '../api/api';
+import {api} from 'api/api';
+import {updateObjInArray} from 'utils/helper/objects-helpers';
 
-const followAD = 'FOLLOW'
-const unfollowAD = 'UNFOLLOW'
-const setUsersAD = 'SET-USERS'
-const setCurrentPageAD = 'SET-CURRENT-PAGE'
-const setTotalUsersCountAD = 'SET-TOTAL-USERS'
-const togglePreloaderAD = 'TOGGLE-PRELOADER'
-const toggleFollowingInProgressAD = 'TOGGLE-FOLLOWING-PROGRESS'
+const followAD = 'samurai-network/users/FOLLOW'
+const unfollowAD = 'samurai-network/users/UNFOLLOW'
+const setUsersAD = 'samurai-network/users/SET-USERS'
+const setCurrentPageAD = 'samurai-network/users/SET-CURRENT-PAGE'
+const setTotalUsersCountAD = 'samurai-network/users/SET-TOTAL-USERS'
+const togglePreloaderAD = 'samurai-network/users/TOGGLE-PRELOADER'
+const toggleFollowingInProgressAD = 'samurai-network/users/TOGGLE-FOLLOWING-PROGRESS'
 
 export type ActionUsersType =
     ReturnType<typeof followAC>
@@ -19,7 +20,7 @@ export type ActionUsersType =
     | ReturnType<typeof togglePreloaderAC>
     | ReturnType<typeof toggleFollowingInProgressAC>;
 
-type PhotosType = {
+export type PhotosType = {
     large: string
     small: string
 }
@@ -56,19 +57,21 @@ export const usersReducer = (state: UsersStateType = initialState, action: Actio
         case followAD: {
             return {
                 ...state,
-                users: state.users.map((user) => user.id === action.payload.id ? !user.followed ? {
-                    ...user,
-                    followed: true
-                } : user : user)
+                users: updateObjInArray(state.users, action.payload.id, {followed: true})
+                // users: state.users.map((user) => user.id === action.payload.id ? {
+                //     ...user,
+                //     followed: !user.followed && true
+                // } : user)
             }
         }
         case unfollowAD: {
             return {
                 ...state,
-                users: state.users.map((user) => user.id === action.payload.id ? user.followed ? {
-                    ...user,
-                    followed: false
-                } : user : user)
+                users: updateObjInArray(state.users, action.payload.id, {followed: false})
+                // users: state.users.map((user) => user.id === action.payload.id ? {
+                //     ...user,
+                //     followed: user.followed && false
+                // } : user)
             }
         }
         case setUsersAD: {
@@ -117,6 +120,7 @@ export const followAC = (id: number) => {
         }
     } as const
 }
+
 export const unfollowAC = (id: number) => {
     return {
         type: unfollowAD,
@@ -175,41 +179,36 @@ export const toggleFollowingInProgressAC = (isFollowing: boolean, userId: number
 //THUNKS
 
 export const setUsersTC = (pageSize: number, currentPage: number): AppThunk =>
-    (dispatch: Dispatch<AppActionType>) => {
-
+    async (dispatch: Dispatch<AppActionType>) => {
         dispatch(setCurrentPageAC(currentPage))
         dispatch(togglePreloaderAC(true))
 
-        api['usersApi'].getUsers(pageSize, currentPage)
-            .then((objUsers) => {
-                dispatch(setUsersAC(objUsers.items))
-                dispatch(setTotalUsersCountAC(objUsers.totalCount))
-                dispatch(togglePreloaderAC(false))
-            })
+        const res = await api['usersApi'].getUsers(pageSize, currentPage)
+        dispatch(setUsersAC(res.items))
+        dispatch(setTotalUsersCountAC(res.totalCount))
+        dispatch(togglePreloaderAC(false))
     }
 
+const followUnfollowFlow = async (isAuth: boolean,
+                                  dispatch: Dispatch<AppActionType>,
+                                  userId: number,
+                                  apiMethod: any,
+                                  actionCreator: typeof followAC | typeof unfollowAC) => {
+    if (isAuth) {
+        dispatch(toggleFollowingInProgressAC(true, userId));
+        const res = await apiMethod(userId);
+        if (res.resultCode === 0)
+            dispatch(actionCreator(userId))
+        dispatch(toggleFollowingInProgressAC(false, userId))
+    }
+}
+
 export const followTC = (userId: number, isAuth: boolean): AppThunk =>
-    (dispatch: Dispatch<AppActionType>) => {
-        if (isAuth) {
-            dispatch(toggleFollowingInProgressAC(true, userId))
-            api['usersApi'].follow(userId)
-                .then((objOnFollow) => {
-                    if (objOnFollow.resultCode === 0)
-                        dispatch(followAC(userId))
-                    dispatch(toggleFollowingInProgressAC(false, userId))
-                })
-        }
+    async (dispatch: Dispatch<AppActionType>) => {
+        followUnfollowFlow(isAuth, dispatch, userId, api['usersApi'].follow.bind(api.usersApi), followAC)
     }
 
 export const unfollowTC = (userId: number, isAuth: boolean): AppThunk =>
-    (dispatch: Dispatch<AppActionType>) => {
-        if (isAuth) {
-            dispatch(toggleFollowingInProgressAC(true, userId))
-            api['usersApi'].unfollow(userId)
-                .then((objOnFollow) => {
-                    if (objOnFollow.resultCode === 0)
-                        dispatch(unfollowAC(userId))
-                    dispatch(toggleFollowingInProgressAC(false, userId))
-                })
-        }
+    async (dispatch: Dispatch<AppActionType>) => {
+        followUnfollowFlow(isAuth, dispatch, userId, api['usersApi'].unfollow.bind(api.usersApi), unfollowAC)
     }

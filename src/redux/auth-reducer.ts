@@ -1,9 +1,9 @@
 import {Dispatch} from 'redux';
 import {AppActionType, AppDispatch} from './redux-store';
-import {api, LoginRequestData} from '../api/api';
+import {api, LoginRequestData} from 'api/api';
 import {stopSubmit} from 'redux-form';
 
-const setUserAuthDataAT = 'SET-USER-AUTH-DATA'
+const setUserAuthDataAT = 'samurai-network/auth/SET-USER-AUTH-DATA'
 
 export type AuthResponseType = {
     data: AuthMeResponseDataType;
@@ -53,31 +53,27 @@ export const setUserAuthDataAC = (data: AuthDataType) => ({
 
 //THUNK CREATORS
 export const authMeTC = () =>
-     (dispatch: Dispatch<AppActionType>) => {
-        return api['auth'].authMe()
-            .then((authObj) => {
-                if (authObj.resultCode === 0)
-                    dispatch(setUserAuthDataAC({...authObj.data, isAuth: true}))
-            })
+    async (dispatch: Dispatch<AppActionType>) => {
+        const authObj = await api['auth'].authMe()
+        if (authObj.resultCode === 0)
+            dispatch(setUserAuthDataAC({...authObj.data, isAuth: true}))
+
     }
 
 export const authLoginTC = (loginData: LoginRequestData) =>
-    (dispatch: AppDispatch & AppActionType) => {
-        api['auth'].authLogin(loginData)
-            .then((authObj) => {
-                if (authObj.resultCode === 0) {
-                    dispatch(authMeTC())
-                } else {
-                    dispatch(stopSubmit('login', {_error: authObj.messages[0]}));
-                }
-            })
+    async (dispatch: AppDispatch & AppActionType) => {
+        const authObj = await api['auth'].authLogin(loginData)
+        if (authObj.resultCode === 0) {
+            dispatch(authMeTC())
+        } else {
+            dispatch(stopSubmit('login', {_error: authObj.messages[0]}));
+        }
     }
 
 export const authLogoutTC = () =>
-    (dispatch: AppDispatch) => {
-        api['auth'].authLogout()
-            .then((authObj) => {
-                if (authObj.resultCode === 0)
-                    dispatch(setUserAuthDataAC({...initialState}))
-            })
+    async (dispatch: AppDispatch) => {
+        const authObj = await api['auth'].authLogout()
+        if (authObj.resultCode === 0)
+            dispatch(setUserAuthDataAC({...initialState}))
+
     }

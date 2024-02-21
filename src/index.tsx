@@ -1,19 +1,10 @@
 import React from 'react';
 import './index.css';
 import ReactDOM from 'react-dom';
-import {BrowserRouter} from 'react-router-dom';
-import { store } from './redux/redux-store';
-import {Provider} from 'react-redux';
-import {AppContainer} from './App';
+import {SamuraiApp} from 'App';
 
 ReactDOM.render(
-    <React.StrictMode>
-        <BrowserRouter>
-            <Provider store={store}>
-                <AppContainer />
-            </Provider>
-        </BrowserRouter>
-    </React.StrictMode>,
+    <SamuraiApp/>,
     document.getElementById('root')
 );
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {AppStateType} from '../../redux/redux-store';
-import {followTC, setUsersTC, unfollowTC, UsersType} from '../../redux/users-reducer';
+import {AppStateType} from 'redux/redux-store';
+import {followTC, setUsersTC, unfollowTC, UsersType} from 'redux/users-reducer';
 import {Users} from './Users';
 import {Preloader} from '../comman/preloader/Preloader';
 import {compose} from 'redux';
@@ -12,7 +12,7 @@ import {
     getPageSize,
     getTotalCount,
     getUsers
-} from '../../redux/selectors/userSelector';
+} from 'redux/selectors/userSelector';
 
 class UsersAPIComponent extends React.Component<UsersPropsType, UsersPropsType> {
 

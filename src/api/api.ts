@@ -1,6 +1,7 @@
 import axios from 'axios';
-import {AuthResponseType} from '../redux/auth-reducer';
-import {UsersType} from '../redux/users-reducer';
+import {AuthResponseType} from 'redux/auth-reducer';
+import {UsersType} from 'redux/users-reducer';
+import {ProfileUserTypePhotos} from 'redux/profile-reducer';
 
 const instance = axios.create({
     baseURL: 'https://social-network.samuraijs.com/api/1.0',
@@ -20,6 +21,7 @@ type ResponseType<T = {}> = {
     data: T
     resultCode: number
     messages: string[]
+    fieldsErrors: string[]
 }
 
 export type LoginRequestData = {
@@ -32,17 +34,17 @@ export type LoginRequestData = {
 export const api = {
     'usersApi': {
         getUsers: (pageSize: number, currentPage: number) => {
-            return instance.get(`/users?count=${pageSize}&page=${currentPage}`)
+            return instance.get<GetUsersResponseType>(`/users?count=${pageSize}&page=${currentPage}`)
                 .then(res => res.data)
         },
 
         follow: (userId: number) => {
-            return instance.post(`/follow/${userId}`)
+            return instance.post<ResponseType>(`/follow/${userId}`)
                 .then(res => res.data)
         },
 
         unfollow: (userId: number) => {
-            return instance.delete(`/follow/${userId}`)
+            return instance.delete<ResponseType>(`/follow/${userId}`)
                 .then(res => res.data)
         },
     },
@@ -60,6 +62,18 @@ export const api = {
 
         updateProfileStatus: (status: string) => {
             return instance.put(`/profile/status`, {status})
+                .then(res => res.data)
+        },
+
+        updateProfilePhoto: (photoFile: File) => {
+            let formData = new FormData();
+            formData.append('image', photoFile);
+
+            return instance.put<ResponseType<ProfileUserTypePhotos>>(`/profile/photo`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
                 .then(res => res.data)
         }
     },
