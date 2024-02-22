@@ -4,11 +4,16 @@ import {ProfileUserType} from 'redux/profile-reducer';
 
 type ProfileBlock = {
     profile: ProfileUserType | null
+    isOwner: boolean
+    goToEditMode: () => void
 }
-
-export const ProfileBlock:React.FC<ProfileBlock> = ({profile}) => {
+debugger;
+export const ProfileBlock:React.FC<ProfileBlock> = ({profile, isOwner, goToEditMode}) => {
     return (
         <div>
+            <div>
+                {profile?.fullName}
+            </div>
             <div>
                 <b>Looking for a job: </b>{profile?.lookingForAJob ? 'yes' : 'no'}
             </div>
@@ -25,6 +30,9 @@ export const ProfileBlock:React.FC<ProfileBlock> = ({profile}) => {
                 <Contact key={key} contactTitle={key} contactValue={value}/>
             )}
             </div>
+            {isOwner && <div>
+                <button onClick={goToEditMode}>Edit</button>
+            </div>}
         </div>
     );
 };

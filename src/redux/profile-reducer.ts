@@ -1,8 +1,10 @@
 import {v1} from 'uuid';
 import {PostPropsType} from 'components/profile/myPosts/post/Post';
 import {Dispatch} from 'redux';
-import {AppActionType} from './redux-store';
+import {AppActionType, AppDispatch, AppStateType} from './redux-store';
 import {api} from 'api/api';
+import {ProfileBlockFormData} from 'components/profile/profileInfotsx/profileBlockForm/profileBlockForm';
+import {stopSubmit} from 'redux-form';
 
 const addPostAT = 'ADD-POST';
 const setUserProfileAT = 'samurai-network/profile/SET-USER-PROFILE';
@@ -157,4 +159,18 @@ export const updatePhotoTC = (photo: File) =>
         const data = await api['profileApi'].updateProfilePhoto(photo)
         if (data.resultCode === 0)
             dispatch(updatePhotoProfileAC(data.data))
+    }
+
+export const saveProfileDataTC = (profileFormData: ProfileBlockFormData) =>
+    async (dispatch: AppDispatch, getState: () => AppStateType) => {
+        const authId = getState().auth.id;
+        const data = await api['profileApi'].saveProfileFormData(profileFormData)
+        if (data.resultCode === 0) {
+            dispatch(getProfileUserTC(authId as number))
+        }
+        else {
+            dispatch(stopSubmit('edit-profile', {_error: data.messages[0]}));
+            // dispatch(stopSubmit('edit-profile', {'contacts': { 'facebook': data.messages[0]}}));
+            return Promise.reject(data.messages[0])
+        }
     }

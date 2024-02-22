@@ -1,9 +1,9 @@
 import React from 'react';
 import {LoginReduxForm} from './LoginForm';
 import {connect} from 'react-redux';
-import {authLoginTC} from '../../redux/auth-reducer';
-import {LoginRequestData} from '../../api/api';
-import {AppStateType} from '../../redux/redux-store';
+import {authLoginTC} from 'redux/auth-reducer';
+import {LoginRequestData} from 'api/api';
+import {AppStateType} from 'redux/redux-store';
 import {Redirect} from 'react-router-dom';
 
 const Login: React.FC<LoginPropsType> = (props) => {

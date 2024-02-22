@@ -11,7 +11,8 @@ export const Profile: React.FC<ProfilePropsType> = (props) => {
                          status={props.status}
                          updateProfileStatus={props.updateProfileStatus}
                          authId={props.authId}
-                         updatePhoto={props.updatePhoto}/>
+                         updatePhoto={props.updatePhoto}
+                         saveProfileData={props.saveProfileData}/>
             <MyPostsContainer/>
         </div>
     );

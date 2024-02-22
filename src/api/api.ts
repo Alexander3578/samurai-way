@@ -2,6 +2,7 @@ import axios from 'axios';
 import {AuthResponseType} from 'redux/auth-reducer';
 import {UsersType} from 'redux/users-reducer';
 import {ProfileUserTypePhotos} from 'redux/profile-reducer';
+import {ProfileBlockFormData} from 'components/profile/profileInfotsx/profileBlockForm/profileBlockForm';
 
 const instance = axios.create({
     baseURL: 'https://social-network.samuraijs.com/api/1.0',
@@ -74,6 +75,11 @@ export const api = {
                     'Content-Type': 'multipart/form-data'
                 }
             })
+                .then(res => res.data)
+        },
+
+        saveProfileFormData: (profileFormData:ProfileBlockFormData) => {
+            return instance.put<ResponseType>(`/profile`, profileFormData)
                 .then(res => res.data)
         }
     },

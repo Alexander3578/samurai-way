@@ -8,10 +8,11 @@ import {withAuthRedirect} from 'hoc/AuthRedirect';
 import {
     getProfileStatusTC,
     getProfileUserTC,
-    ProfileUserType,
+    ProfileUserType, saveProfileDataTC,
     updatePhotoTC,
     updateProfileStatusTC
 } from 'redux/profile-reducer';
+import {ProfileBlockFormData} from 'components/profile/profileInfotsx/profileBlockForm/profileBlockForm';
 
 class ProfileApi extends React.Component<PropsType, ProfilePropsType> {
 
@@ -38,7 +39,8 @@ class ProfileApi extends React.Component<PropsType, ProfilePropsType> {
                      status={this.props.status}
                      updateProfileStatus={this.props.updateProfileStatus}
                      authId={this.props.authId}
-                     updatePhoto={this.props.updatePhoto} />
+                     updatePhoto={this.props.updatePhoto}
+                     saveProfileData={this.props.saveProfileData}/>
         )
     };
 }
@@ -58,6 +60,7 @@ type mapDispatchToPropsType = {
     getProfileStatus: (userId: number | null) => void
     updateProfileStatus: (status: string) => void
     updatePhoto: (photo: File) => void
+    saveProfileData: (profileFormData:ProfileBlockFormData) => Promise<undefined | string>
 }
 
 type paramsType = {
@@ -80,7 +83,8 @@ export default compose<React.ComponentType>(
     withAuthRedirect,
     connect(mapStateToProps, {
         getProfileUser: getProfileUserTC, getProfileStatus: getProfileStatusTC,
-        updateProfileStatus: updateProfileStatusTC, updatePhoto: updatePhotoTC
+        updateProfileStatus: updateProfileStatusTC, updatePhoto: updatePhotoTC,
+        saveProfileData: saveProfileDataTC
     }),
     withRouter,
 )(ProfileApi)
