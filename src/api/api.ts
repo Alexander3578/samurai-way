@@ -99,6 +99,13 @@ export const api = {
             return instance.delete<ResponseType>('/auth/login')
                 .then(res => res.data)
         }
+    },
+
+    'security': {
+        getCaptchaURL: () => {
+            return instance.get('/security/get-captcha-url')
+                .then(res => res.data)
+        }
     }
 
 }

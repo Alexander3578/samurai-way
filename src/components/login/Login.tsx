@@ -16,7 +16,8 @@ const Login: React.FC<LoginPropsType> = (props) => {
         props.isAuth ? <Redirect to={'/profile'}/> :
         <div>
             <h1>LOGIN</h1>
-            <LoginReduxForm onSubmit={onSubmitHandler}/>
+            <LoginReduxForm onSubmit={onSubmitHandler}
+                            captchaUrl={props.captchaUrl}/>
         </div>
     );
 };
@@ -28,11 +29,13 @@ type LoginMapDispatchToPropsType = {
 }
 
 type LoginMapStateToPropsType = {
-    isAuth: boolean
+    isAuth: boolean,
+    captchaUrl: string | undefined
 }
 
 let mapStateToProps = (state: AppStateType): LoginMapStateToPropsType => ({
-    isAuth: state.auth.isAuth
+    isAuth: state.auth.isAuth,
+    captchaUrl: state.auth.captchaUrl
 })
 
 export const LoginContainer = connect(mapStateToProps, {login: authLoginTC})(Login)

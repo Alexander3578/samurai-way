@@ -4,6 +4,7 @@ import {api, LoginRequestData} from 'api/api';
 import {stopSubmit} from 'redux-form';
 
 const setUserAuthDataAT = 'samurai-network/auth/SET-USER-AUTH-DATA'
+const getCaptchaUrlAT = 'samurai-network/auth/GET-CAPTCHA-URL'
 
 export type AuthResponseType = {
     data: AuthMeResponseDataType;
@@ -15,19 +16,21 @@ export type AuthMeResponseDataType = {
     id: number | null;
     login: string;
     email: string | null;
+    captchaUrl?: string | undefined
 }
 
 type AuthDataType = AuthMeResponseDataType & {
     isAuth: boolean
 }
 
-export type ActionAuthType = ReturnType<typeof setUserAuthDataAC>
+export type ActionAuthType = ReturnType<typeof setUserAuthDataAC> | ReturnType<typeof getCaptchaUrlAC>
 
 const initialState = {
     id: null,
     login: '',
     email: null,
-    isAuth: false
+    isAuth: false,
+    captchaUrl: ''
 }
 
 export const authReducer = (state: AuthDataType = initialState, action: ActionAuthType) => {
@@ -36,6 +39,12 @@ export const authReducer = (state: AuthDataType = initialState, action: ActionAu
             return {
                 ...state,
                 ...action.payload.data,
+            }
+        }
+        case getCaptchaUrlAT: {
+            return {
+                ...state,
+                captchaUrl: action.payload.captchaUrl
             }
         }
         default: {
@@ -51,6 +60,13 @@ export const setUserAuthDataAC = (data: AuthDataType) => ({
     }
 } as const)
 
+export const getCaptchaUrlAC = (captchaUrl: string) => ({
+    type: getCaptchaUrlAT,
+    payload: {
+        captchaUrl
+    }
+} as const)
+
 //THUNK CREATORS
 export const authMeTC = () =>
     async (dispatch: Dispatch<AppActionType>) => {
@@ -61,13 +77,21 @@ export const authMeTC = () =>
     }
 
 export const authLoginTC = (loginData: LoginRequestData) =>
-    async (dispatch: AppDispatch & AppActionType) => {
+    async (dispatch: AppDispatch) => {
         const authObj = await api['auth'].authLogin(loginData)
         if (authObj.resultCode === 0) {
             dispatch(authMeTC())
         } else {
+            if (authObj.resultCode === 10)
+                dispatch(getCaptchaUrlTC())
             dispatch(stopSubmit('login', {_error: authObj.messages[0]}));
         }
+    }
+
+export const getCaptchaUrlTC = () =>
+    async (dispatch: AppDispatch) => {
+        const res = await api['security'].getCaptchaURL();
+        dispatch(getCaptchaUrlAC(res.url));
     }
 
 export const authLogoutTC = () =>
