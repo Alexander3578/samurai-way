@@ -1,6 +1,6 @@
 import {Dispatch} from 'redux';
 import {AppActionType, AppThunk} from './redux-store';
-import {api} from 'api/api';
+import {api, ResponseType} from 'api/api';
 import {updateObjInArray} from 'utils/helper/objects-helpers';
 
 const followAD = 'samurai-network/users/FOLLOW'
@@ -21,8 +21,8 @@ export type ActionUsersType =
     | ReturnType<typeof toggleFollowingInProgressAC>;
 
 export type PhotosType = {
-    large: string
-    small: string
+    large: string | null
+    small: string | null
 }
 
 export type UsersType = {
@@ -34,13 +34,18 @@ export type UsersType = {
     uniqueUrlName: string | null
 }
 
-type UsersStateType = {
+export type UsersStateType = {
     users: UsersType[]
     totalCount: number
     pageSize: number
     currentPage: number
     isFetching: boolean
     followingInProgress: number[]
+}
+
+export enum ResultCode {
+    Success = 0,
+    Error = 1,
 }
 
 const initialState: UsersStateType = {
@@ -52,7 +57,7 @@ const initialState: UsersStateType = {
     followingInProgress: []
 }
 
-export const usersReducer = (state: UsersStateType = initialState, action: ActionUsersType) => {
+export const usersReducer = (state: UsersStateType = initialState, action: ActionUsersType):UsersStateType => {
     switch (action.type) {
         case followAD: {
             return {
@@ -192,12 +197,12 @@ export const setUsersTC = (pageSize: number, currentPage: number): AppThunk =>
 const followUnfollowFlow = async (isAuth: boolean,
                                   dispatch: Dispatch<AppActionType>,
                                   userId: number,
-                                  apiMethod: any,
+                                  apiMethod: (userId: number) => Promise<ResponseType>,
                                   actionCreator: typeof followAC | typeof unfollowAC) => {
     if (isAuth) {
         dispatch(toggleFollowingInProgressAC(true, userId));
         const res = await apiMethod(userId);
-        if (res.resultCode === 0)
+        if (res.resultCode === ResultCode.Success)
             dispatch(actionCreator(userId))
         dispatch(toggleFollowingInProgressAC(false, userId))
     }
@@ -205,10 +210,10 @@ const followUnfollowFlow = async (isAuth: boolean,
 
 export const followTC = (userId: number, isAuth: boolean): AppThunk =>
     async (dispatch: Dispatch<AppActionType>) => {
-        followUnfollowFlow(isAuth, dispatch, userId, api['usersApi'].follow.bind(api.usersApi), followAC)
+        await followUnfollowFlow(isAuth, dispatch, userId, api['usersApi'].follow.bind(api.usersApi), followAC)
     }
 
 export const unfollowTC = (userId: number, isAuth: boolean): AppThunk =>
     async (dispatch: Dispatch<AppActionType>) => {
-        followUnfollowFlow(isAuth, dispatch, userId, api['usersApi'].unfollow.bind(api.usersApi), unfollowAC)
+        await followUnfollowFlow(isAuth, dispatch, userId, api['usersApi'].unfollow.bind(api.usersApi), unfollowAC)
     }

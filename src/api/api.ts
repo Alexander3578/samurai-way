@@ -18,7 +18,7 @@ type GetUsersResponseType = {
     error: string
 }
 
-type ResponseType<T = {}> = {
+export type ResponseType<T = {}> = {
     data: T
     resultCode: number
     messages: string[]
